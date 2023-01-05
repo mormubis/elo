@@ -1,0 +1,8 @@
+# Output
+/dist/
+
+# Node
+node_modules/
+
+# Tests
+coverage/
