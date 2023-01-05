@@ -16,6 +16,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: node
+      - name: Cache NPM Modules
+        id: cache-node
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm ci
       - name: Verify
         run: npm run test
       - name: Release to NPM
