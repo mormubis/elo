@@ -38,5 +38,5 @@
     "test:watch": "npm run test -- --watch"
   },
   "types": "dist/index.d.ts",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }
