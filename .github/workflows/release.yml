@@ -15,7 +15,6 @@ jobs:
       - name: Setup
         uses: actions/setup-node@v4
         with:
-          cache: 'pnpm'
           node-version: 'node'
           registry-url: 'https://registry.npmjs.org'
           scope: '@echecs'
