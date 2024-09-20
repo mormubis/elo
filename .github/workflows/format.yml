@@ -1,0 +1,36 @@
+name: 👔 Format
+
+on:
+  pull_request:
+  workflow_call:
+
+concurrency:
+  group: format-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  default:
+    name: 👔 Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          cache: 'pnpm'
+          node-version: 'node'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@echecs'
+
+      - name: 📥 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 👔 Format
+        run: pnpm run format:ci
