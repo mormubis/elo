@@ -6,129 +6,60 @@ on:
       - main
 
 jobs:
-  setup:
-    name: Setup
+  check:
+    name: ✅ Check version
+    outputs:
+      changed: ${{ steps.check.outputs.changed }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: ⬇️ Checkout code
         uses: actions/checkout@v4
-      - name: Setup
-        uses: actions/setup-node@v4
+
+      - id: check
+        uses: EndBug/version-check@v2
         with:
-          node-version: 'node'
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@echecs'
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: latest
-      - name: Cache NPM Modules
-        id: cache-node
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-      - name: Install dependencies
-        if: steps.cache-node.outputs.cache-hit != 'true'
-        run: pnpm install
-      - name: Upload code
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.sha }}
-          path: .
+          diff-search: true
+
   format:
-    name: Lint
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: Setup
-        uses: actions/setup-node@v4
-        with:
-          node-version: node
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@echecs'
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: latest
-      - name: Download code
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ github.sha }}
-      - name: Install dependencies
-        run: pnpm install
-      - name: Lint
-        run: pnpm run format:ci
+    name: 👔 Format
+    uses: ./.github/workflows/format.yml
+
   lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: Setup
-        uses: actions/setup-node@v4
-        with:
-          node-version: node
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@echecs'
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: latest
-      - name: Download code
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ github.sha }}
-      - name: Install dependencies
-        run: pnpm install
-      - name: Lint
-        run: pnpm run lint
-  verify:
-    name: Verify
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: Setup
-        uses: actions/setup-node@v4
-        with:
-          node-version: node
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@echecs'
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: latest
-      - name: Download code
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ github.sha }}
-      - name: Install dependencies
-        run: pnpm install
-      - name: Test
-        run: pnpm run test
+    name: 🔬 Lint
+    uses: ./.github/workflows/lint.yml
+
+  test:
+    name: 🧪 Test
+    uses: ./.github/workflows/test.yml
+
   release:
     name: Release
     permissions:
       id-token: write
       contents: read
     runs-on: ubuntu-latest
-    needs: [format, lint, verify]
+    needs: [check, format, lint, test]
+    if: needs.check.outputs.changed == 'true'
     steps:
-      - name: Setup
-        uses: actions/setup-node@v4
-        with:
-          node-version: node
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@echecs'
-      - name: Install pnpm
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: latest
-      - name: Download code
-        uses: actions/download-artifact@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
         with:
-          name: ${{ github.sha }}
-      - name: Install dependencies
-        run: pnpm install
+          cache: 'pnpm'
+          node-version: 'node'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@echecs'
+
+      - name: 📥 Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Release to NPM
         run: pnpm publish --access public --provenance
         env:
