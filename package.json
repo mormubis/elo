@@ -4,6 +4,7 @@
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@typescript-eslint/parser": "^8.25.0",
+    "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.2",
     "eslint-import-resolver-typescript": "^3.8.3",
     "eslint-plugin-import-x": "^4.6.1",
