@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@eslint/js':
         specifier: ^9.23.0
-        version: 9.32.0
+        version: 9.33.0
       '@typescript-eslint/parser':
         specifier: ^8.28.0
         version: 8.39.0(eslint@9.33.0)(typescript@5.9.2)
