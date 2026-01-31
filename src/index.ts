@@ -58,7 +58,7 @@ function expected(a: number, b: number): number {
 }
 
 /**
- * etermines the appropriate K-factor based on age, rating, game type, and other conditions.
+ * Determines the appropriate K-factor based on age, rating, game type, and other conditions.
  *
  * @param age - The age of the player. Defaults to 18.
  * @param everHigher2400 - Whether the player’s rating has ever been higher than 2400.
