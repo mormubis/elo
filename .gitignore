@@ -6,3 +6,7 @@ node_modules/
 
 # Tests
 coverage/
+
+# Documentation
+docs/api/*
+!docs/api/.gitkeep

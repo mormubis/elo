@@ -39,6 +39,7 @@
   "repository": "mormubis/elo",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
+    "docs": "typedoc",
     "format": "pnpm run format:ci --write",
     "format:ci": "prettier -l \"**/*.+(css|js|json|jsx|md|mjs|mts|ts|tsx|yml|yaml)\"",
     "lint": "pnpm run lint:style && pnpm run lint:types",
