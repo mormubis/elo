@@ -50,6 +50,15 @@
     "test:coverage": "pnpm run test --coverage",
     "test:watch": "pnpm run test --watch"
   },
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "**/*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
   "type": "module",
   "types": "dist/index.d.ts",
   "version": "1.0.7"
