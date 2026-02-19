@@ -1,3 +1,5 @@
+type Result = 0 | 0.5 | 1;
+
 interface KFactorOptions {
   age?: number;
   everHigher2400?: boolean;
@@ -19,7 +21,7 @@ interface UpdateOptions {
   k?: number;
   kA?: number;
   kB?: number;
-  result: number;
+  result: Result;
 }
 
 const MAX_DIFF = 400;
@@ -101,8 +103,8 @@ function kFactor({
 function update(
   a: number,
   b: number,
-  resultOrOptions: 0 | 0.5 | 1 | UpdateOptions,
-): [number, number] {
+  resultOrOptions: Result | UpdateOptions,
+): [ratingA: number, ratingB: number] {
   const options =
     typeof resultOrOptions === 'number'
       ? { result: resultOrOptions }
@@ -142,4 +144,5 @@ function update(
   ];
 }
 
+export type { Result, KFactorOptions, UpdateOptions };
 export { delta, expected, kFactor, update };
