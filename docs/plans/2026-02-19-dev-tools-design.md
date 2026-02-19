@@ -1,16 +1,18 @@
 # Development Tools Upgrade Design
 
-**Date:** 2026-02-19
-**Project:** @echecs/elo
-**Status:** Approved
+**Date:** 2026-02-19 **Project:** @echecs/elo **Status:** Approved
 
 ## Overview
 
-This design document outlines the enhancement of the @echecs/elo development tooling to improve developer experience and enforce best practices. The existing CI/CD workflows are already in place and functional. This upgrade focuses on adding pre-commit hooks and API documentation generation.
+This design document outlines the enhancement of the @echecs/elo development
+tooling to improve developer experience and enforce best practices. The existing
+CI/CD workflows are already in place and functional. This upgrade focuses on
+adding pre-commit hooks and API documentation generation.
 
 ## Current State
 
 **Existing Infrastructure:**
+
 - Lint, test, build, and publish workflows already running on every commit
 - TypeScript 5.8.2 with strict mode enabled
 - ESLint with flat config (modern setup)
@@ -19,6 +21,7 @@ This design document outlines the enhancement of the @echecs/elo development too
 - pnpm as the package manager
 
 **Gaps:**
+
 - No pre-commit hooks to catch issues before commits
 - No auto-generated API documentation
 - Developers must rely on CI feedback rather than local validation
@@ -30,10 +33,12 @@ This design document outlines the enhancement of the @echecs/elo development too
 #### 1. Pre-commit Hooks (husky + lint-staged)
 
 **Add dependencies:**
+
 - `husky` — Git hooks management framework
 - `lint-staged` — Run linters/formatters on staged files only
 
 **Configure hooks:**
+
 - Create `.husky/pre-commit` hook that runs `lint-staged`
 - Configure `lint-staged` in `package.json` to:
   - Format files with Prettier
@@ -41,12 +46,14 @@ This design document outlines the enhancement of the @echecs/elo development too
   - Type-check with TypeScript compiler
 
 **Benefits:**
+
 - Catches formatting and linting issues locally before commits
 - Faster feedback loop (no need to wait for CI)
 - Prevents broken code from entering the repository
 - Improves code quality consistency
 
 **Example `.husky/pre-commit` behavior:**
+
 ```
 Staged files → Format → Lint → Type-check → Commit
 ```
@@ -54,20 +61,24 @@ Staged files → Format → Lint → Type-check → Commit
 #### 2. TypeDoc Integration
 
 **Add dependency:**
+
 - `typedoc` — Generates API documentation from JSDoc/TSDoc comments
 
 **Configure:**
+
 - Create `typedoc.json` configuration file
 - Add `pnpm run docs` script to generate documentation
 - Output directory: `docs/api/`
 
 **Documentation setup:**
+
 - Automatically extract documentation from JSDoc comments in source code
 - Generate HTML documentation site
 - Include type definitions and usage examples
 - Keep docs in sync with code without manual updates
 
 **Benefits:**
+
 - Auto-generated, always accurate API documentation
 - Professional documentation for library users
 - Can be published with releases or deployed to GitHub Pages
@@ -90,6 +101,7 @@ typedoc.json            # TypeDoc configuration
 ### Configuration Files
 
 **`typedoc.json`:**
+
 ```json
 {
   "entryPoints": ["src/index.ts"],
@@ -100,6 +112,7 @@ typedoc.json            # TypeDoc configuration
 ```
 
 **`package.json` (lint-staged config):**
+
 ```json
 {
   "lint-staged": {
@@ -131,11 +144,13 @@ typedoc.json            # TypeDoc configuration
 ## Success Criteria
 
 ✅ **Pre-commit hooks:**
+
 - Developers see linting/formatting feedback before pushing to CI
 - No broken code commits reach the repository
 - Setup is transparent and doesn't slow down commits noticeably
 
 ✅ **Documentation:**
+
 - API documentation can be generated with a single command
 - Documentation is automatically derived from JSDoc comments
 - Documentation is accessible and searchable
@@ -151,7 +166,8 @@ typedoc.json            # TypeDoc configuration
 ## Testing
 
 - Run `pnpm run docs` to verify TypeDoc output
-- Commit a file with intentional linting issues to verify pre-commit hook blocks it
+- Commit a file with intentional linting issues to verify pre-commit hook blocks
+  it
 - Fix issues and verify commit succeeds
 
 ## Future Considerations
