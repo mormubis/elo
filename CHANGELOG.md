@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-02-21
+
+### Added
+
+- `performance(games: ResultAndOpponent[])` function implementing FIDE §8.2.3
+  performance rating calculation
+- `ResultAndOpponent` interface exported for use with `performance()`
+
 ## [1.0.8] - 2026-02-20
 
 ### Added
@@ -113,7 +121,8 @@ and this project adheres to
 - GitHub Actions CI/CD workflow for automated testing
 - NPM publishing automation
 
-[Unreleased]: https://github.com/mormubis/elo/compare/v1.0.8...HEAD
+[Unreleased]: https://github.com/mormubis/elo/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/mormubis/elo/compare/v1.0.8...v1.1.0
 [1.0.8]: https://github.com/mormubis/elo/compare/v1.0.7...v1.0.8
 [1.0.0]: https://github.com/mormubis/elo/releases/tag/v1.0.0
 [1.0.1]: https://github.com/mormubis/elo/compare/v1.0.0...v1.0.1
