@@ -26,7 +26,6 @@ interface UpdateOptions {
 
 const MAX_DIFF = 400;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface ResultAndOpponent {
   opponentRating: number;
   result: Result;
@@ -34,7 +33,6 @@ interface ResultAndOpponent {
 
 // @see https://handbook.fide.com/chapter/B022024 Section 8.1.1
 // Index = Math.round(p * 100), value = dp
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DP_TABLE: readonly number[] = [
   -800, -677, -589, -538, -501, -470, -444, -422, -401, -383, -366, -351, -336,
   -322, -309, -296, -284, -273, -262, -251, -240, -230, -220, -211, -202, -193,
@@ -169,5 +167,30 @@ function update(
   ];
 }
 
-export type { Result, KFactorOptions, UpdateOptions };
-export { delta, expected, kFactor, update };
+/**
+ * Calculates the performance rating of a player over a series of games.
+ *
+ * @see https://handbook.fide.com/chapter/B022024 Section 8.2.3
+ * @param games - Array of games, each containing the opponent's rating and the result.
+ * @returns The performance rating rounded to the nearest integer.
+ * @throws {RangeError} If the games array is empty.
+ */
+function performance(games: ResultAndOpponent[]): number {
+  if (games.length === 0) {
+    throw new RangeError('games must not be empty');
+  }
+
+  const ra =
+    games.reduce((sum, game) => sum + game.opponentRating, 0) / games.length;
+
+  const score = games.reduce((sum, game) => sum + game.result, 0);
+  const p = score / games.length;
+
+  const index = Math.round(p * 100);
+  const dp = DP_TABLE[index] ?? 0;
+
+  return Math.round(ra + dp);
+}
+
+export type { KFactorOptions, Result, ResultAndOpponent, UpdateOptions };
+export { delta, expected, kFactor, performance, update };
