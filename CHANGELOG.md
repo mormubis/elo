@@ -8,6 +8,30 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.8] - 2026-02-20
+
+### Added
+
+- SECURITY.md with private vulnerability disclosure process
+- GitHub issue templates for bug reports and feature requests
+- Pull request template with checklist
+- GitHub Pages documentation deployment via TypeDoc
+- Coverage reporting with Codecov
+- GitHub Release creation on publish
+
+### Changed
+
+- Expanded test suite with direct tests for `delta()` and `kFactor()`, draw/loss
+  result paths, `isRapid`, `everHigher2400B`, and K-factor overrides
+- Added `homepage`, `bugs`, `engines`, and `exports` fields to `package.json`
+- Fixed installation command in README (removed `--save-dev`)
+- Added npm version, CI, coverage, and license badges to README
+- Removed duplicate `lint-staged` config from `package.json`
+
+### Fixed
+
+- Added missing `@vitest/coverage-v8` dependency for coverage reporting
+
 ## [1.0.7] - 2026-02-20
 
 ### Added
@@ -89,7 +113,8 @@ and this project adheres to
 - GitHub Actions CI/CD workflow for automated testing
 - NPM publishing automation
 
-[Unreleased]: https://github.com/mormubis/elo/compare/v1.0.7...HEAD
+[Unreleased]: https://github.com/mormubis/elo/compare/v1.0.8...HEAD
+[1.0.8]: https://github.com/mormubis/elo/compare/v1.0.7...v1.0.8
 [1.0.0]: https://github.com/mormubis/elo/releases/tag/v1.0.0
 [1.0.1]: https://github.com/mormubis/elo/compare/v1.0.0...v1.0.1
 [1.0.2]: https://github.com/mormubis/elo/compare/v1.0.1...v1.0.2
