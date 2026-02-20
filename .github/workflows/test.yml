@@ -31,4 +31,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🧪 Test
-        run: pnpm run test
+        run: pnpm run test:coverage
+
+      - name: 📊 Upload coverage
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

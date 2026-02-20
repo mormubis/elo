@@ -1,5 +1,10 @@
 # ELO
 
+[![npm](https://img.shields.io/npm/v/@echecs/elo)](https://www.npmjs.com/package/@echecs/elo)
+[![Test](https://github.com/mormubis/elo/actions/workflows/test.yml/badge.svg)](https://github.com/mormubis/elo/actions/workflows/test.yml)
+[![Coverage](https://codecov.io/gh/mormubis/elo/branch/main/graph/badge.svg)](https://codecov.io/gh/mormubis/elo)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 **ELO** is part of the **ECHECS** project, providing an implementation of the
 [ELO Rating System](https://en.wikipedia.org/wiki/Elo_rating_system) following
 [FIDE rules](https://handbook.fide.com/chapter/B022024).
@@ -7,7 +12,7 @@
 ## Installation
 
 ```bash
-npm install --save-dev @echecs/elo
+npm install @echecs/elo
 ```
 
 ## Usage
