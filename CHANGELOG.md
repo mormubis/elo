@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2026-02-20
+
+### Added
+
+- Pre-commit hooks with husky and lint-staged to enforce code quality before
+  commits (Adrian de la Rosa) - d68de0e
+- TypeDoc integration for auto-generating API documentation from JSDoc comments
+  (Adrian de la Rosa) - 98ebef5
+- `pnpm run docs` script to generate HTML API documentation (Adrian de la
+  Rosa) - 98ebef5
+
+### Fixed
+
+- Format output for TypeDoc generation (Adrian de la Rosa) - b48ede0
+
 ## [1.0.0] - 2023-01-04
 
 ### Added
@@ -79,3 +94,4 @@ and this project adheres to
 [1.0.4]: https://github.com/mormubis/elo/compare/v1.0.3...v1.0.4
 [1.0.5]: https://github.com/mormubis/elo/compare/v1.0.4...v1.0.5
 [1.0.6]: https://github.com/mormubis/elo/compare/v1.0.5...v1.0.6
+[1.0.7]: https://github.com/mormubis/elo/compare/v1.0.6...v1.0.7
