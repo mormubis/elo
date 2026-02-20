@@ -10,8 +10,11 @@ concurrency:
 
 jobs:
   default:
-    name: 🧪 Test
+    name: 🧪 Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v4
@@ -25,7 +28,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: 'pnpm'
-          node-version: 'node'
+          node-version: ${{ matrix.node-version }}
 
       - name: 📥 Install dependencies
         run: pnpm install --frozen-lockfile
@@ -35,5 +38,6 @@ jobs:
 
       - name: 📊 Upload coverage
         uses: codecov/codecov-action@v5
+        if: matrix.node-version == 22
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
