@@ -129,3 +129,8 @@ const [newRatingA, newRatingB] = update(ratingA, ratingB, {
   gamesA: 10,
 }); // [1420, 1390]
 ```
+
+## Contributing
+
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for
+guidelines on how to submit issues and pull requests.
