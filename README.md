@@ -4,6 +4,7 @@
 [![Test](https://github.com/mormubis/elo/actions/workflows/test.yml/badge.svg)](https://github.com/mormubis/elo/actions/workflows/test.yml)
 [![Coverage](https://codecov.io/gh/mormubis/elo/branch/main/graph/badge.svg)](https://codecov.io/gh/mormubis/elo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![API Docs](https://img.shields.io/badge/API-docs-blue.svg)](https://mormubis.github.io/elo/)
 
 **ELO** is part of the **ECHECS** project, providing an implementation of the
 [ELO Rating System](https://en.wikipedia.org/wiki/Elo_rating_system) following
@@ -129,6 +130,10 @@ const [newRatingA, newRatingB] = update(ratingA, ratingB, {
   gamesA: 10,
 }); // [1420, 1390]
 ```
+
+## API Documentation
+
+Full API documentation is available at https://mormubis.github.io/elo/
 
 ## Contributing
 
