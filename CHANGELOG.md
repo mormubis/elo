@@ -8,6 +8,33 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-02-21
+
+### Changed
+
+- `update()` now accepts `PlayerOptions` objects for `a` and `b` parameters,
+  allowing per-player options (`age`, `games`, `everHigher2400`, `k`) to be
+  passed directly on each player argument
+- Game-level options (`isBlitz`, `isRapid`, `result`) are now passed as a
+  `GameOptions` object in the third argument
+
+### Removed
+
+- `UpdateOptions` type removed from public API; use `PlayerOptions` and
+  `GameOptions` instead
+- `kA`, `kB`, `k` (shared) fields removed from third argument; use `k` on each
+  `PlayerOptions` object instead
+
+### Migration
+
+```ts
+// Before
+update(1400, 1600, { ageA: 17, gamesB: 5, kA: 40, result: 1 });
+
+// After
+update({ age: 17, k: 40, rating: 1400 }, { games: 5, rating: 1600 }, 1);
+```
+
 ## [1.1.0] - 2026-02-21
 
 ### Added
@@ -121,7 +148,8 @@ and this project adheres to
 - GitHub Actions CI/CD workflow for automated testing
 - NPM publishing automation
 
-[Unreleased]: https://github.com/mormubis/elo/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/mormubis/elo/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/mormubis/elo/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/mormubis/elo/compare/v1.0.8...v1.1.0
 [1.0.8]: https://github.com/mormubis/elo/compare/v1.0.7...v1.0.8
 [1.0.0]: https://github.com/mormubis/elo/releases/tag/v1.0.0
