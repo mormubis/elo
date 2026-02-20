@@ -9,19 +9,18 @@ interface KFactorOptions {
   rating: number;
 }
 
-interface UpdateOptions {
-  ageA?: number;
-  ageB?: number;
-  everHigher2400A?: boolean;
-  everHigher2400B?: boolean;
-  gamesA?: number;
-  gamesB?: number;
+interface GameOptions {
   isBlitz?: boolean;
   isRapid?: boolean;
-  k?: number;
-  kA?: number;
-  kB?: number;
   result: Result;
+}
+
+interface PlayerOptions {
+  age?: number;
+  everHigher2400?: boolean;
+  games?: number;
+  k?: number;
+  rating: number;
 }
 
 const MAX_DIFF = 400;
@@ -196,5 +195,11 @@ function performance(games: ResultAndOpponent[]): number {
   return Math.round(ra + dp);
 }
 
-export type { KFactorOptions, Result, ResultAndOpponent, UpdateOptions };
+export type {
+  GameOptions,
+  KFactorOptions,
+  PlayerOptions,
+  Result,
+  ResultAndOpponent,
+};
 export { delta, expected, kFactor, performance, update };
