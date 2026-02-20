@@ -1,7 +1,7 @@
 import eslint from '@eslint/js';
 import vitest from '@vitest/eslint-plugin';
 import prettier from 'eslint-config-prettier';
-import { flatConfigs } from 'eslint-plugin-import-x';
+import * as importing from 'eslint-plugin-import-x';
 import unicorn from 'eslint-plugin-unicorn';
 import * as typescript from 'typescript-eslint';
 
@@ -10,8 +10,8 @@ export default typescript.config(
   prettier,
   ...typescript.configs.strict,
   ...typescript.configs.stylistic,
-  flatConfigs.recommended,
-  flatConfigs.typescript,
+  importing.flatConfigs.recommended,
+  importing.flatConfigs.typescript,
   unicorn.configs.recommended,
   /**
    * Common
