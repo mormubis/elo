@@ -18,7 +18,7 @@ describe('ELO Rank tests', () => {
   });
 
   it('should update rating properly', function () {
-    const [a, b] = update(1200, 1400, { k: 32, result: 1 });
+    const [a, b] = update({ k: 32, rating: 1200 }, { k: 32, rating: 1400 }, 1);
 
     expect(a).toBe(1224);
     expect(b).toBe(1376);
@@ -26,7 +26,7 @@ describe('ELO Rank tests', () => {
 
   it('should round rating properly', function () {
     // Changed respectively to the original file to complain against FIDE > 400 diff points
-    const [a, b] = update(1802, 1186, { k: 32, result: 1 });
+    const [a, b] = update({ k: 32, rating: 1802 }, { k: 32, rating: 1186 }, 1);
 
     expect(a).toBe(1805);
     expect(b).toBe(1183);
@@ -130,53 +130,54 @@ describe('FIDE Rules', () => {
   });
 
   it('Equal rating - newly player', () => {
-    const [a, b] = update(1400, 1400, { gamesA: 0, result: 1 });
+    const [a, b] = update({ games: 0, rating: 1400 }, 1400, 1);
 
     expect(a).toBe(1420);
     expect(b).toBe(1390);
 
-    const [c, d] = update(1400, 1400, { gamesA: 30, result: 1 });
+    const [c, d] = update({ games: 30, rating: 1400 }, 1400, 1);
 
     expect(c).toBe(1420);
     expect(d).toBe(1390);
 
     // No more less than 30 games
-    const [established, establishedB] = update(1400, 1400, {
-      gamesA: 31,
-      result: 1,
-    });
+    const [established, establishedB] = update(
+      { games: 31, rating: 1400 },
+      1400,
+      1,
+    );
 
     expect(established).toBe(1410);
     expect(establishedB).toBe(1390);
   });
 
   it('Equal rating - newly player B', () => {
-    const [a, b] = update(1400, 1400, { gamesB: 0, result: 1 });
+    const [a, b] = update(1400, { games: 0, rating: 1400 }, 1);
 
     expect(a).toBe(1410);
     expect(b).toBe(1380);
   });
 
   it('Equal rating - young player', () => {
-    const [a, b] = update(1400, 1400, { ageA: 5, result: 1 });
+    const [a, b] = update({ age: 5, rating: 1400 }, 1400, 1);
 
     expect(a).toBe(1420);
     expect(b).toBe(1390);
 
-    const [c, d] = update(1400, 1400, { ageA: 17, result: 1 });
+    const [c, d] = update({ age: 17, rating: 1400 }, 1400, 1);
 
     expect(c).toBe(1420);
     expect(d).toBe(1390);
 
     // No more a young player
-    const [adult, adultB] = update(1400, 1400, { ageA: 18, result: 1 });
+    const [adult, adultB] = update({ age: 18, rating: 1400 }, 1400, 1);
 
     expect(adult).toBe(1410);
     expect(adultB).toBe(1390);
   });
 
   it('Equal rating - young player - but not more than 2300', () => {
-    const [a, b] = update(2300, 2300, { ageA: 15, result: 1 });
+    const [a, b] = update({ age: 15, rating: 2300 }, 2300, 1);
 
     expect(a).toBe(2310);
     expect(b).toBe(2290);
@@ -190,14 +191,14 @@ describe('FIDE Rules', () => {
   });
 
   it('Equal rating - less than 2400 but ever above 2400 (player A)', () => {
-    const [a, b] = update(2300, 2300, { everHigher2400A: true, result: 1 });
+    const [a, b] = update({ everHigher2400: true, rating: 2300 }, 2300, 1);
 
     expect(a).toBe(2305);
     expect(b).toBe(2290);
   });
 
   it('Equal rating - less than 2400 but ever above 2400 (player B)', () => {
-    const [a, b] = update(2300, 2300, { everHigher2400B: true, result: 1 });
+    const [a, b] = update(2300, { everHigher2400: true, rating: 2300 }, 1);
 
     expect(a).toBe(2310);
     expect(b).toBe(2295);
@@ -233,14 +234,14 @@ describe('FIDE Rules', () => {
   });
 
   it('Explicit kA and kB overrides are respected', () => {
-    const [a, b] = update(1400, 1400, { kA: 40, kB: 10, result: 1 });
+    const [a, b] = update({ k: 40, rating: 1400 }, { k: 10, rating: 1400 }, 1);
 
     expect(a).toBe(1420);
     expect(b).toBe(1395);
   });
 
   it('Explicit k override applies to both players', () => {
-    const [a, b] = update(1400, 1400, { k: 32, result: 1 });
+    const [a, b] = update({ k: 32, rating: 1400 }, { k: 32, rating: 1400 }, 1);
 
     expect(a).toBe(1416);
     expect(b).toBe(1384);
