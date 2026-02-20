@@ -18,9 +18,9 @@
   },
   "files": [
     "/dist/",
-    "CHANGELOG.md",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "chess",
