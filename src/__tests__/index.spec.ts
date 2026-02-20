@@ -5,7 +5,7 @@ import { delta, expected, kFactor, update } from '../index.js';
 // @see https://github.com/dmamills/elo-rank/blob/f691623c4d048705a8754f044c6a2b3d2df395a5/test/tests.js
 describe('ELO Rank tests', () => {
   it('should calculate expected properly', function () {
-    expect(expected(1200, 1400)).toBeCloseTo(0.24025);
+    expect(expected(1200, 1400)).toBeCloseTo(0.240_25);
   });
 
   it('Expect 50/50 chance for equal ranks', function () {
@@ -141,10 +141,13 @@ describe('FIDE Rules', () => {
     expect(d).toBe(1390);
 
     // No more less than 30 games
-    const [e, f] = update(1400, 1400, { gamesA: 31, result: 1 });
+    const [established, establishedB] = update(1400, 1400, {
+      gamesA: 31,
+      result: 1,
+    });
 
-    expect(e).toBe(1410);
-    expect(f).toBe(1390);
+    expect(established).toBe(1410);
+    expect(establishedB).toBe(1390);
   });
 
   it('Equal rating - newly player B', () => {
@@ -166,10 +169,10 @@ describe('FIDE Rules', () => {
     expect(d).toBe(1390);
 
     // No more a young player
-    const [e, f] = update(1400, 1400, { ageA: 18, result: 1 });
+    const [adult, adultB] = update(1400, 1400, { ageA: 18, result: 1 });
 
-    expect(e).toBe(1410);
-    expect(f).toBe(1390);
+    expect(adult).toBe(1410);
+    expect(adultB).toBe(1390);
   });
 
   it('Equal rating - young player - but not more than 2300', () => {
@@ -211,10 +214,10 @@ describe('FIDE Rules', () => {
     expect(c).toBe(2310);
     expect(d).toBe(2290);
 
-    const [e, f] = update(2400, 2400, { isBlitz: true, result: 1 });
+    const [elite, eliteB] = update(2400, 2400, { isBlitz: true, result: 1 });
 
-    expect(e).toBe(2410);
-    expect(f).toBe(2390);
+    expect(elite).toBe(2410);
+    expect(eliteB).toBe(2390);
   });
 
   it('Equal rating - rapid game', () => {

@@ -79,13 +79,19 @@ function kFactor({
   rating,
 }: KFactorOptions): 10 | 20 | 40 {
   // If the game is Blitz or Rapid type, return K-factor 20.
-  if (isBlitz || isRapid) return 20;
+  if (isBlitz || isRapid) {
+    return 20;
+  }
 
   // If the player has played 30 games or fewer, or is under 18 with a rating under 2300, return K-factor 40.
-  if (games <= 30 || (age < 18 && rating < 2300)) return 40;
+  if (games <= 30 || (age < 18 && rating < 2300)) {
+    return 40;
+  }
 
   // If the player's rating is under 2400 and has never been higher than 2400, return K-factor 20.
-  if (rating < 2400 && !everHigher2400) return 20;
+  if (rating < 2400 && !everHigher2400) {
+    return 20;
+  }
 
   // Otherwise, return K-factor 10.
   return 10;
