@@ -8,6 +8,34 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-02-21
+
+### Added
+
+- `GameType` type (`'blitz' | 'rapid' | 'standard'`) exported from the package
+
+### Changed
+
+- `KFactorOptions` and `GameOptions` now use `gameType?: GameType` instead of
+  the mutually exclusive `isBlitz?: boolean` / `isRapid?: boolean` pair
+
+### Removed
+
+- `isBlitz` and `isRapid` fields removed from `KFactorOptions` and
+  `GameOptions`; use `gameType: 'blitz'` or `gameType: 'rapid'` instead
+
+### Migration
+
+```ts
+// Before
+kFactor({ isBlitz: true, rating: 1400 });
+update(1400, 1600, { isRapid: true, result: 1 });
+
+// After
+kFactor({ gameType: 'blitz', rating: 1400 });
+update(1400, 1600, { gameType: 'rapid', result: 1 });
+```
+
 ## [2.0.0] - 2026-02-21
 
 ### Changed
@@ -148,7 +176,8 @@ update({ age: 17, k: 40, rating: 1400 }, { games: 5, rating: 1600 }, 1);
 - GitHub Actions CI/CD workflow for automated testing
 - NPM publishing automation
 
-[Unreleased]: https://github.com/mormubis/elo/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/mormubis/elo/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/mormubis/elo/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/mormubis/elo/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/mormubis/elo/compare/v1.0.8...v1.1.0
 [1.0.8]: https://github.com/mormubis/elo/compare/v1.0.7...v1.0.8
