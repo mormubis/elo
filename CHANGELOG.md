@@ -26,14 +26,28 @@ and this project adheres to
 
 ### Migration
 
+Replace `isBlitz: true` with `gameType: 'blitz'` and `isRapid: true` with
+`gameType: 'rapid'` everywhere. The field appears in both `kFactor` options and
+the `GameOptions` third argument of `update`.
+
 ```ts
 // Before
 kFactor({ isBlitz: true, rating: 1400 });
+kFactor({ isRapid: true, rating: 2400 });
+update(1400, 1600, { isBlitz: true, result: 1 });
 update(1400, 1600, { isRapid: true, result: 1 });
 
 // After
 kFactor({ gameType: 'blitz', rating: 1400 });
+kFactor({ gameType: 'rapid', rating: 2400 });
+update(1400, 1600, { gameType: 'blitz', result: 1 });
 update(1400, 1600, { gameType: 'rapid', result: 1 });
+```
+
+Player options are unaffected — they still go on the player arguments:
+
+```ts
+update({ age: 17, rating: 1400 }, 1600, { gameType: 'blitz', result: 1 });
 ```
 
 ## [2.0.0] - 2026-02-21
@@ -55,12 +69,26 @@ update(1400, 1600, { gameType: 'rapid', result: 1 });
 
 ### Migration
 
-```ts
-// Before
-update(1400, 1600, { ageA: 17, gamesB: 5, kA: 40, result: 1 });
+The third argument is now a `GameOptions` object (or a bare `Result` shorthand
+when no game options are needed). Player-specific options move onto each player
+argument as a `PlayerOptions` object.
 
-// After
-update({ age: 17, k: 40, rating: 1400 }, { games: 5, rating: 1600 }, 1);
+```ts
+// Before — flat options bag
+update(1400, 1600, { result: 1 });
+update(1400, 1600, { ageA: 17, result: 1 });
+update(1400, 1600, { gamesB: 5, result: 1 });
+update(1400, 1600, { kA: 40, result: 1 });
+update(1400, 1600, { kA: 40, kB: 10, result: 1 });
+update(1400, 1600, { isBlitz: true, result: 1 });
+
+// After — per-player objects + game options
+update(1400, 1600, 1); // bare result shorthand still works
+update({ age: 17, rating: 1400 }, 1600, 1); // age on player A
+update(1400, { games: 5, rating: 1600 }, 1); // games on player B
+update({ k: 40, rating: 1400 }, 1600, 1); // k on player A
+update({ k: 40, rating: 1400 }, { k: 10, rating: 1600 }, 1); // k on each player
+update(1400, 1600, { gameType: 'blitz', result: 1 }); // game-level option
 ```
 
 ## [1.1.0] - 2026-02-21
