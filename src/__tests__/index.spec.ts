@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { delta, expected, kFactor, update } from '../index.js';
+import { delta, expected, kFactor, performance, update } from '../index.js';
 
 // @see https://github.com/dmamills/elo-rank/blob/f691623c4d048705a8754f044c6a2b3d2df395a5/test/tests.js
 describe('ELO Rank tests', () => {
@@ -251,5 +251,67 @@ describe('FIDE Rules', () => {
     const maxDiff = expected(1000, 1400);
 
     expect(capped).toBe(maxDiff);
+  });
+});
+
+describe('performance', () => {
+  it('throws RangeError for empty games array', () => {
+    expect(() => performance([])).toThrow(RangeError);
+  });
+
+  it('returns Ra when p = 0.5 (all draws)', () => {
+    // dp = 0 at p=0.5, so result = Ra
+    const result = performance([
+      { opponentRating: 1400, result: 0.5 },
+      { opponentRating: 1600, result: 0.5 },
+    ]);
+    expect(result).toBe(1500); // Ra = (1400+1600)/2 = 1500, dp = 0
+  });
+
+  it('returns Ra - 800 when p = 0 (all losses)', () => {
+    const result = performance([
+      { opponentRating: 1400, result: 0 },
+      { opponentRating: 1600, result: 0 },
+    ]);
+    expect(result).toBe(700); // Ra = 1500, dp = -800
+  });
+
+  it('returns Ra + 800 when p = 1 (all wins)', () => {
+    const result = performance([
+      { opponentRating: 1400, result: 1 },
+      { opponentRating: 1600, result: 1 },
+    ]);
+    expect(result).toBe(2300); // Ra = 1500, dp = 800
+  });
+
+  // Cross-checked against https://ratings.fide.com/calc.phtml?page=change
+  it('matches FIDE calculator for mixed results', () => {
+    // 3 wins, 1 draw, 1 loss against 1600-rated opponents
+    // score = 3.5/5 = 0.70, Ra = 1600, dp = 149 → 1749
+    const result = performance([
+      { opponentRating: 1600, result: 1 },
+      { opponentRating: 1600, result: 1 },
+      { opponentRating: 1600, result: 1 },
+      { opponentRating: 1600, result: 0.5 },
+      { opponentRating: 1600, result: 0 },
+    ]);
+    expect(result).toBe(1749);
+  });
+
+  it('handles a single game win', () => {
+    // score = 1/1 = 1.0, Ra = 1400, dp = 800 → 2200
+    const result = performance([{ opponentRating: 1400, result: 1 }]);
+    expect(result).toBe(2200);
+  });
+
+  it('rounds to nearest integer', () => {
+    // Ra = 1433.33... → should round correctly
+    const result = performance([
+      { opponentRating: 1400, result: 0.5 },
+      { opponentRating: 1400, result: 0.5 },
+      { opponentRating: 1500, result: 0.5 },
+    ]);
+    // Ra = (1400+1400+1500)/3 = 1433.33, p=0.5, dp=0 → Math.round(1433.33) = 1433
+    expect(result).toBe(1433);
   });
 });
