@@ -173,7 +173,7 @@ function update(
  * @see https://handbook.fide.com/chapter/B022024 Section 8.2.3
  * @param games - Array of games, each containing the opponent's rating and the result.
  * @returns The performance rating rounded to the nearest integer.
- * @throws {RangeError} If the games array is empty.
+ * @throws {RangeError} If the games array is empty or contains invalid result values.
  */
 function performance(games: ResultAndOpponent[]): number {
   if (games.length === 0) {
@@ -187,7 +187,11 @@ function performance(games: ResultAndOpponent[]): number {
   const p = score / games.length;
 
   const index = Math.round(p * 100);
-  const dp = DP_TABLE[index] ?? 0;
+  const dp = DP_TABLE[index];
+
+  if (dp === undefined) {
+    throw new RangeError(`result values must be 0, 0.5, or 1`);
+  }
 
   return Math.round(ra + dp);
 }
