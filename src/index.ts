@@ -116,53 +116,56 @@ function kFactor({
 /**
  * Updates the Elo ratings of two players based on the result of their game.
  *
- * @param a - The current rating of the first player.
- * @param b - The current rating of the second player.
+ * @param a - The current rating of player A, or a PlayerOptions object.
+ * @param b - The current rating of player B, or a PlayerOptions object.
  * @param resultOrOptions - The result of the game (0 for loss, 0.5 for draw, 1 for win)
- *                           or an options object containing additional parameters.
+ *                          or a GameOptions object containing the result and game type.
  * @returns A tuple of the updated ratings for both players.
  */
 function update(
-  a: number,
-  b: number,
-  resultOrOptions: Result | UpdateOptions,
+  a: number | PlayerOptions,
+  b: number | PlayerOptions,
+  resultOrOptions: Result | GameOptions,
 ): [ratingA: number, ratingB: number] {
-  const options =
+  const playerA = typeof a === 'number' ? { rating: a } : a;
+  const playerB = typeof b === 'number' ? { rating: b } : b;
+  const game =
     typeof resultOrOptions === 'number'
       ? { result: resultOrOptions }
       : resultOrOptions;
 
   // Calculate the expected probabilities of both players winning.
-  const [oddsA, oddsB] = [expected(a, b), expected(b, a)];
+  const [oddsA, oddsB] = [
+    expected(playerA.rating, playerB.rating),
+    expected(playerB.rating, playerA.rating),
+  ];
 
   // Determine the K-factors for both players, allowing overrides or defaults based on conditions.
   const [kA, kB] = [
-    options.kA ??
-      options.k ??
+    playerA.k ??
       kFactor({
-        age: options.ageA,
-        everHigher2400: options.everHigher2400A,
-        games: options.gamesA,
-        isBlitz: options.isBlitz,
-        isRapid: options.isRapid,
-        rating: a,
+        age: playerA.age,
+        everHigher2400: playerA.everHigher2400,
+        games: playerA.games,
+        isBlitz: game.isBlitz,
+        isRapid: game.isRapid,
+        rating: playerA.rating,
       }),
-    options.kB ??
-      options.k ??
+    playerB.k ??
       kFactor({
-        age: options.ageB,
-        everHigher2400: options.everHigher2400B,
-        games: options.gamesB,
-        isBlitz: options.isBlitz,
-        isRapid: options.isRapid,
-        rating: b,
+        age: playerB.age,
+        everHigher2400: playerB.everHigher2400,
+        games: playerB.games,
+        isBlitz: game.isBlitz,
+        isRapid: game.isRapid,
+        rating: playerB.rating,
       }),
   ];
 
   // Calculate and return the updated ratings for both players, rounded to the nearest integer.
   return [
-    Math.round(a + delta(options.result, oddsA, kA)),
-    Math.round(b + delta(1 - options.result, oddsB, kB)),
+    Math.round(playerA.rating + delta(game.result, oddsA, kA)),
+    Math.round(playerB.rating + delta(1 - game.result, oddsB, kB)),
   ];
 }
 
