@@ -21,33 +21,28 @@ and this project adheres to
 
 - Format output for TypeDoc generation (Adrian de la Rosa) - b48ede0
 
-## [1.0.0] - 2023-01-04
-
-### Added
-
-- Initial ELO rating system implementation following FIDE rules
-- `expected(a, b)` function to calculate win probability based on rating
-  difference
-- `kFactor(options)` function to determine K-factor based on FIDE rules
-- `delta(actual, expected, kFactor)` function to calculate rating change
-- `update(a, b, result)` main function for orchestrating rating updates
-- TypeScript strict mode with full type safety
-- Comprehensive test coverage for all FIDE rules and edge cases
-- ESLint and Prettier configuration for code quality
-- GitHub Actions CI/CD workflow for automated testing
-- NPM publishing automation
-
-## [1.0.1] - 2023-01-07
-
-### Fixed
-
-- Remove any additional unused space (Adrian de la Rosa) - 6a44031
-
-## [1.0.2] - 2023-01-08
+## [1.0.6] - 2024-09-20
 
 ### Changed
 
-- Bump dependencies (Adrian de la Rosa) - 96f54db
+- Bump typescript-eslint from 8.5.0 to 8.6.0 (Adrian de la Rosa) - 990074d
+- Bump dependencies (Adrian de la Rosa) - a1dfedf
+- Bump dependencies (Adrian de la Rosa) - 248277b
+- Format code (Adrian de la Rosa) - 72dfa88
+- Format lock file (Adrian de la Rosa) - 421caf8
+
+## [1.0.5] - 2024-09-20
+
+### Changed
+
+- Bump dependencies (Adrian de la Rosa) - b4487ee
+- Bump dependencies (Adrian de la Rosa) - 98da831
+
+## [1.0.4] - 2024-09-14
+
+### Fixed
+
+- Fix CI (Adrian de la Rosa) - 119a48a
 
 ## [1.0.3] - 2024-09-14
 
@@ -64,28 +59,33 @@ and this project adheres to
 - Bumped @types/jest from 29.5.0 to 29.5.1 (Adrian de la Rosa) - 35fc512
 - Bumped prettier from 2.8.7 to 2.8.8 (Adrian de la Rosa) - fb15bbf
 
-## [1.0.4] - 2024-09-14
+## [1.0.2] - 2023-01-08
+
+### Changed
+
+- Bump dependencies (Adrian de la Rosa) - 96f54db
+
+## [1.0.1] - 2023-01-07
 
 ### Fixed
 
-- Fix CI (Adrian de la Rosa) - 119a48a
+- Remove any additional unused space (Adrian de la Rosa) - 6a44031
 
-## [1.0.5] - 2024-09-20
+## [1.0.0] - 2023-01-04
 
-### Changed
+### Added
 
-- Bump dependencies (Adrian de la Rosa) - b4487ee
-- Bump dependencies (Adrian de la Rosa) - 98da831
-
-## [1.0.6] - 2024-09-20
-
-### Changed
-
-- Bump typescript-eslint from 8.5.0 to 8.6.0 (Adrian de la Rosa) - 990074d
-- Bump dependencies (Adrian de la Rosa) - a1dfedf
-- Bump dependencies (Adrian de la Rosa) - 248277b
-- Format code (Adrian de la Rosa) - 72dfa88
-- Format lock file (Adrian de la Rosa) - 421caf8
+- Initial ELO rating system implementation following FIDE rules
+- `expected(a, b)` function to calculate win probability based on rating
+  difference
+- `kFactor(options)` function to determine K-factor based on FIDE rules
+- `delta(actual, expected, kFactor)` function to calculate rating change
+- `update(a, b, result)` main function for orchestrating rating updates
+- TypeScript strict mode with full type safety
+- Comprehensive test coverage for all FIDE rules and edge cases
+- ESLint and Prettier configuration for code quality
+- GitHub Actions CI/CD workflow for automated testing
+- NPM publishing automation
 
 [1.0.0]: https://github.com/mormubis/elo/releases/tag/v1.0.0
 [1.0.1]: https://github.com/mormubis/elo/compare/v1.0.0...v1.0.1
