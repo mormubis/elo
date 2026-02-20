@@ -94,15 +94,15 @@ describe('kFactor', () => {
   });
 
   it('returns 20 for a blitz game regardless of rating', () => {
-    expect(kFactor({ isBlitz: true, rating: 1400 })).toBe(20);
-    expect(kFactor({ isBlitz: true, rating: 2400 })).toBe(20);
-    expect(kFactor({ games: 5, isBlitz: true, rating: 1400 })).toBe(20);
+    expect(kFactor({ gameType: 'blitz', rating: 1400 })).toBe(20);
+    expect(kFactor({ gameType: 'blitz', rating: 2400 })).toBe(20);
+    expect(kFactor({ gameType: 'blitz', games: 5, rating: 1400 })).toBe(20);
   });
 
   it('returns 20 for a rapid game regardless of rating', () => {
-    expect(kFactor({ isRapid: true, rating: 1400 })).toBe(20);
-    expect(kFactor({ isRapid: true, rating: 2400 })).toBe(20);
-    expect(kFactor({ games: 5, isRapid: true, rating: 1400 })).toBe(20);
+    expect(kFactor({ gameType: 'rapid', rating: 1400 })).toBe(20);
+    expect(kFactor({ gameType: 'rapid', rating: 2400 })).toBe(20);
+    expect(kFactor({ gameType: 'rapid', games: 5, rating: 1400 })).toBe(20);
   });
 });
 
@@ -205,29 +205,32 @@ describe('FIDE Rules', () => {
   });
 
   it('Equal rating - blitz game', () => {
-    const [a, b] = update(1400, 1400, { isBlitz: true, result: 1 });
+    const [a, b] = update(1400, 1400, { gameType: 'blitz', result: 1 });
 
     expect(a).toBe(1410);
     expect(b).toBe(1390);
 
-    const [c, d] = update(2300, 2300, { isBlitz: true, result: 1 });
+    const [c, d] = update(2300, 2300, { gameType: 'blitz', result: 1 });
 
     expect(c).toBe(2310);
     expect(d).toBe(2290);
 
-    const [elite, eliteB] = update(2400, 2400, { isBlitz: true, result: 1 });
+    const [elite, eliteB] = update(2400, 2400, {
+      gameType: 'blitz',
+      result: 1,
+    });
 
     expect(elite).toBe(2410);
     expect(eliteB).toBe(2390);
   });
 
   it('Equal rating - rapid game', () => {
-    const [a, b] = update(1400, 1400, { isRapid: true, result: 1 });
+    const [a, b] = update(1400, 1400, { gameType: 'rapid', result: 1 });
 
     expect(a).toBe(1410);
     expect(b).toBe(1390);
 
-    const [c, d] = update(2400, 2400, { isRapid: true, result: 1 });
+    const [c, d] = update(2400, 2400, { gameType: 'rapid', result: 1 });
 
     expect(c).toBe(2410);
     expect(d).toBe(2390);
