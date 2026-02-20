@@ -1,17 +1,17 @@
 type Result = 0 | 0.5 | 1;
 
+type GameType = 'blitz' | 'rapid' | 'standard';
+
 interface KFactorOptions {
   age?: number;
   everHigher2400?: boolean;
+  gameType?: GameType;
   games?: number;
-  isBlitz?: boolean;
-  isRapid?: boolean;
   rating: number;
 }
 
 interface GameOptions {
-  isBlitz?: boolean;
-  isRapid?: boolean;
+  gameType?: GameType;
   result: Result;
 }
 
@@ -81,21 +81,19 @@ function expected(a: number, b: number): number {
  * @param age - The age of the player. Defaults to 18.
  * @param everHigher2400 - Whether the player’s rating has ever been higher than 2400.
  * @param games - The number of games the player has played. Defaults to 32.
- * @param isBlitz - Whether the game is Blitz type. Defaults to false.
- * @param isRapid - Whether the game is Rapid type. Defaults to false.
+ * @param gameType - The type of game: 'blitz', 'rapid', or 'standard'. Omitting defaults to standard.
  * @param rating - The current rating of the player.
  * @returns The K-factor to be used in rating calculations: 10, 20, or 40.
  */
 function kFactor({
   age = 18,
   everHigher2400,
+  gameType,
   games = 32,
-  isBlitz = false,
-  isRapid = false,
   rating,
 }: KFactorOptions): 10 | 20 | 40 {
   // If the game is Blitz or Rapid type, return K-factor 20.
-  if (isBlitz || isRapid) {
+  if (gameType === 'blitz' || gameType === 'rapid') {
     return 20;
   }
 
@@ -146,18 +144,16 @@ function update(
       kFactor({
         age: playerA.age,
         everHigher2400: playerA.everHigher2400,
+        gameType: game.gameType,
         games: playerA.games,
-        isBlitz: game.isBlitz,
-        isRapid: game.isRapid,
         rating: playerA.rating,
       }),
     playerB.k ??
       kFactor({
         age: playerB.age,
         everHigher2400: playerB.everHigher2400,
+        gameType: game.gameType,
         games: playerB.games,
-        isBlitz: game.isBlitz,
-        isRapid: game.isRapid,
         rating: playerB.rating,
       }),
   ];
@@ -200,6 +196,7 @@ function performance(games: ResultAndOpponent[]): number {
 
 export type {
   GameOptions,
+  GameType,
   KFactorOptions,
   PlayerOptions,
   Result,
