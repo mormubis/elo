@@ -14,6 +14,26 @@ It follows [FIDE rules](https://handbook.fide.com/chapter/B022024) out of the
 box: K-factors by age, games played, and rating tier; a 400-point rating
 difference cap; and performance rating calculation. Zero runtime dependencies.
 
+## Why this library?
+
+Most Elo libraries on npm give you the basic formula and nothing else. If you're
+building a chess platform or any app that follows FIDE rules, you'd have to
+implement the rest yourself. This library ships it all out of the box:
+
+- **FIDE K-factor rules** — K=40 for new players (≤ 30 games) and juniors (age <
+  18, rating < 2300), K=10 for players who have ever reached 2400, K=20 for
+  everyone else. No configuration needed.
+- **Game type awareness** — blitz and rapid games always use K=20, regardless of
+  rating or experience, matching FIDE §B02.
+- **400-point rating difference cap** — rating differences above 400 are clamped
+  before calculating win probability, as required by FIDE §8.3.1. Most libraries
+  skip this.
+- **Performance rating** — calculates a player's FIDE performance rating
+  (§8.2.3) over a series of games. No other Elo library on npm implements this.
+
+If you don't need FIDE compliance, any Elo library will do. If you do, this is
+the one.
+
 ## Installation
 
 ```bash
