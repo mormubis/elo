@@ -7,9 +7,11 @@ implementing the ELO Rating System following FIDE rules.
 
 ## Project Overview
 
-Pure calculation library, no runtime dependencies. Exports four functions:
-`expected`, `kFactor`, `delta`, and `update`. All source lives in
-`src/index.ts`; tests in `src/__tests__/index.spec.ts`.
+Pure calculation library, no runtime dependencies. Exports five functions
+(`expected`, `kFactor`, `delta`, `update`, `performance`) and six types
+(`GameOptions`, `GameType`, `KFactorOptions`, `PlayerOptions`, `Result`,
+`ResultAndOpponent`). All source lives in `src/index.ts`; tests in
+`src/__tests__/index.spec.ts`.
 
 ---
 
@@ -66,7 +68,9 @@ pnpm lint && pnpm test && pnpm build
 - Avoid non-null assertions (`!`); use proper narrowing instead
   (`@typescript-eslint/no-non-null-assertion` is a warning).
 - Use `interface` for object shapes and `type` for unions/aliases — consistent
-  with existing code (`Result`, `KFactorOptions`, `UpdateOptions`).
+  with existing code (`Result`, `GameType`, `KFactorOptions`, `PlayerOptions`).
+- Always include the `.js` extension on relative imports — NodeNext resolution
+  requires it even for `.ts` source files.
 
 ---
 
@@ -84,13 +88,18 @@ pnpm lint && pnpm test && pnpm build
 
 - `eqeqeq` — always use `===`/`!==`.
 - `curly: 'all'` — always use braces for control flow bodies, even single lines.
-- `sort-keys` — object literal keys must be sorted alphabetically. This applies
-  to source files; it is disabled inside test files.
-- `sort-imports` — named import specifiers must be sorted (declaration-level
-  sort is handled by `import-x/order` instead).
-- `no-console` — disallowed in source; permitted in tests.
+- `sort-keys` — object literal keys and interface fields must be sorted
+  alphabetically in source files. Disabled in test files.
+- `sort-imports` — named import specifiers must be sorted within each import
+  statement. Declaration-level ordering is handled by `import-x/order`.
+- `no-console` — disallowed in source (warning); permitted in tests.
 - `no-async-promise-executor` — warning; avoid async functions inside
   `new Promise(...)`.
+- **`eslint-plugin-unicorn`** (recommended) is enabled — it enforces a broad set
+  of modern JS/TS idioms (e.g. prefer `Array.from`, avoid `Array.forEach`,
+  prefer `globalThis`). Run `pnpm lint:style` to see and auto-fix violations.
+- **`@vitest/eslint-plugin`** (recommended) is enabled in test files — enforces
+  correct Vitest usage (e.g. no `.only` left in, proper async handling).
 
 ### Import ordering (`import-x/order`)
 
@@ -111,29 +120,28 @@ import { describe, expect, it } from 'vitest';
 import { delta, expected, kFactor, update } from '../index.js';
 ```
 
-- Always include the `.js` extension on relative imports (NodeNext resolution
-  requirement, even for `.ts` source files).
-
 ---
 
 ## Naming Conventions
 
-- **Functions**: camelCase (`kFactor`, `update`, `delta`, `expected`).
-- **Types / Interfaces**: PascalCase (`Result`, `KFactorOptions`,
-  `UpdateOptions`).
-- **Constants**: SCREAMING_SNAKE_CASE for module-level constants (`MAX_DIFF`).
+- **Functions**: camelCase (`kFactor`, `update`, `delta`, `expected`,
+  `performance`).
+- **Types / Interfaces**: PascalCase (`Result`, `GameType`, `KFactorOptions`,
+  `PlayerOptions`, `GameOptions`, `ResultAndOpponent`).
+- **Constants**: SCREAMING_SNAKE_CASE for module-level constants (`MAX_DIFF`,
+  `DP_TABLE`).
 - **Variables / Parameters**: camelCase; use descriptive names, not single
   letters, except for well-understood mathematical shorthands (`a`, `b` for
-  player ratings in the ELO domain, `k` for K-factor).
+  player ratings, `k` for K-factor, `p` for probability).
 - **Test `describe` labels**: match the exported name exactly or a short prose
-  description; `it` / `test` labels begin with `'should …'` or a brief
-  declarative phrase.
+  description; `it` labels use a brief declarative phrase (e.g.
+  `'returns 40 for a new player'`).
 
 ---
 
 ## Testing
 
-- Framework: **Vitest** (configured inline via `package.json` scripts).
+- Framework: **Vitest** (configured via `package.json` scripts).
 - Test files live in `src/__tests__/` with the `.spec.ts` suffix.
 - Use `describe` blocks to group related cases; use `it` (not `test`) inside
   them.
@@ -150,12 +158,17 @@ import { delta, expected, kFactor, update } from '../index.js';
 
 - `expected(a, b)` — win probability for player A; clamps rating diff to ±400
   (FIDE §8.3.1).
-- `kFactor(options)` — returns `10 | 20 | 40`; blitz/rapid always → 20; ≤30
-  games or (age < 18 and rating < 2300) → 40; ever reached 2400 → 10.
+- `kFactor(options)` — returns `10 | 20 | 40`. Decision order:
+  1. `gameType === 'blitz' || 'rapid'` → 20
+  2. `gamesPlayed <= 30` or `(age < 18 && rating < 2300)` → 40
+  3. `rating >= 2400 || everHigher2400` → 10
+  4. Otherwise → 20
 - `delta(actual, expected, k)` — `k * (actual − expected)`.
-- `update(a, b, resultOrOptions)` — orchestrates the full update; accepts a bare
-  `Result` (0 | 0.5 | 1) or a full `UpdateOptions` object.
-- Results are **rounded to the nearest integer** (`Math.round`).
+- `update(a, b, resultOrOptions)` — accepts bare numbers or `PlayerOptions`
+  objects for `a`/`b`, and a bare `Result` (0 | 0.5 | 1) or `GameOptions` object
+  as the third argument. Results are rounded to the nearest integer.
+- `performance(games)` — FIDE §8.2.3 performance rating via `DP_TABLE` lookup;
+  throws `RangeError` for an empty array or out-of-range result values.
 - The library has **no runtime dependencies**; keep it that way.
 
 ---
@@ -164,4 +177,5 @@ import { delta, expected, kFactor, update } from '../index.js';
 
 The package is published as `@echecs/elo`. A GitHub Actions workflow publishes
 automatically when the `version` field in `package.json` is bumped on `main`. Do
-not manually publish. Update `CHANGELOG.md` alongside any version bump.
+not manually publish. Always update `CHANGELOG.md` alongside any version bump.
+Bump patch for fixes, minor for new features, major for breaking changes.
