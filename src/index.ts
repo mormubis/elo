@@ -6,7 +6,7 @@ interface KFactorOptions {
   age?: number;
   everHigher2400?: boolean;
   gameType?: GameType;
-  games?: number;
+  gamesPlayed?: number;
   rating: number;
 }
 
@@ -18,17 +18,17 @@ interface GameOptions {
 interface PlayerOptions {
   age?: number;
   everHigher2400?: boolean;
-  games?: number;
+  gamesPlayed?: number;
   k?: number;
   rating: number;
 }
-
-const MAX_DIFF = 400;
 
 interface ResultAndOpponent {
   opponentRating: number;
   result: Result;
 }
+
+const MAX_DIFF = 400;
 
 // @see https://handbook.fide.com/chapter/B022024 Section 8.1.1
 // Index = Math.round(p * 100), value = dp
@@ -80,7 +80,7 @@ function expected(a: number, b: number): number {
  *
  * @param age - The age of the player. Defaults to 18.
  * @param everHigher2400 - Whether the player’s rating has ever been higher than 2400.
- * @param games - The number of games the player has played. Defaults to 32.
+ * @param gamesPlayed - The number of games the player has played. Defaults to 32.
  * @param gameType - The type of game: 'blitz', 'rapid', or 'standard'. Omitting defaults to standard.
  * @param rating - The current rating of the player.
  * @returns The K-factor to be used in rating calculations: 10, 20, or 40.
@@ -89,7 +89,7 @@ function kFactor({
   age = 18,
   everHigher2400,
   gameType,
-  games = 32,
+  gamesPlayed = 32,
   rating,
 }: KFactorOptions): 10 | 20 | 40 {
   // If the game is Blitz or Rapid type, return K-factor 20.
@@ -98,7 +98,7 @@ function kFactor({
   }
 
   // If the player has played 30 games or fewer, or is under 18 with a rating under 2300, return K-factor 40.
-  if (games <= 30 || (age < 18 && rating < 2300)) {
+  if (gamesPlayed <= 30 || (age < 18 && rating < 2300)) {
     return 40;
   }
 
@@ -145,7 +145,7 @@ function update(
         age: playerA.age,
         everHigher2400: playerA.everHigher2400,
         gameType: game.gameType,
-        games: playerA.games,
+        gamesPlayed: playerA.gamesPlayed,
         rating: playerA.rating,
       }),
     playerB.k ??
@@ -153,7 +153,7 @@ function update(
         age: playerB.age,
         everHigher2400: playerB.everHigher2400,
         gameType: game.gameType,
-        games: playerB.games,
+        gamesPlayed: playerB.gamesPlayed,
         rating: playerB.rating,
       }),
   ];

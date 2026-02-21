@@ -8,6 +8,25 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-02-21
+
+### Changed
+
+- `KFactorOptions` and `PlayerOptions`: `games` field renamed to `gamesPlayed`
+  for clarity
+
+### Migration
+
+```ts
+// Before
+kFactor({ games: 5, rating: 1400 });
+update({ games: 30, rating: 1400 }, 1600, 1);
+
+// After
+kFactor({ gamesPlayed: 5, rating: 1400 });
+update({ gamesPlayed: 30, rating: 1400 }, 1600, 1);
+```
+
 ## [2.1.0] - 2026-02-21
 
 ### Added
@@ -204,7 +223,8 @@ update(1400, 1600, { gameType: 'blitz', result: 1 }); // game-level option
 - GitHub Actions CI/CD workflow for automated testing
 - NPM publishing automation
 
-[Unreleased]: https://github.com/mormubis/elo/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/mormubis/elo/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/mormubis/elo/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/mormubis/elo/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/mormubis/elo/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/mormubis/elo/compare/v1.0.8...v1.1.0

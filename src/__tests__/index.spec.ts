@@ -66,13 +66,13 @@ describe('delta', () => {
 
 describe('kFactor', () => {
   it('returns 40 for a player with 30 or fewer games', () => {
-    expect(kFactor({ games: 0, rating: 1400 })).toBe(40);
-    expect(kFactor({ games: 30, rating: 1400 })).toBe(40);
+    expect(kFactor({ gamesPlayed: 0, rating: 1400 })).toBe(40);
+    expect(kFactor({ gamesPlayed: 30, rating: 1400 })).toBe(40);
   });
 
   it('returns 20 for a player with more than 30 games and rating below 2400', () => {
-    expect(kFactor({ games: 31, rating: 1400 })).toBe(20);
-    expect(kFactor({ games: 31, rating: 2399 })).toBe(20);
+    expect(kFactor({ gamesPlayed: 31, rating: 1400 })).toBe(20);
+    expect(kFactor({ gamesPlayed: 31, rating: 2399 })).toBe(20);
   });
 
   it('returns 10 for a player rated 2400 or above', () => {
@@ -96,13 +96,17 @@ describe('kFactor', () => {
   it('returns 20 for a blitz game regardless of rating', () => {
     expect(kFactor({ gameType: 'blitz', rating: 1400 })).toBe(20);
     expect(kFactor({ gameType: 'blitz', rating: 2400 })).toBe(20);
-    expect(kFactor({ gameType: 'blitz', games: 5, rating: 1400 })).toBe(20);
+    expect(kFactor({ gameType: 'blitz', gamesPlayed: 5, rating: 1400 })).toBe(
+      20,
+    );
   });
 
   it('returns 20 for a rapid game regardless of rating', () => {
     expect(kFactor({ gameType: 'rapid', rating: 1400 })).toBe(20);
     expect(kFactor({ gameType: 'rapid', rating: 2400 })).toBe(20);
-    expect(kFactor({ gameType: 'rapid', games: 5, rating: 1400 })).toBe(20);
+    expect(kFactor({ gameType: 'rapid', gamesPlayed: 5, rating: 1400 })).toBe(
+      20,
+    );
   });
 });
 
@@ -130,19 +134,19 @@ describe('FIDE Rules', () => {
   });
 
   it('Equal rating - newly player', () => {
-    const [a, b] = update({ games: 0, rating: 1400 }, 1400, 1);
+    const [a, b] = update({ gamesPlayed: 0, rating: 1400 }, 1400, 1);
 
     expect(a).toBe(1420);
     expect(b).toBe(1390);
 
-    const [c, d] = update({ games: 30, rating: 1400 }, 1400, 1);
+    const [c, d] = update({ gamesPlayed: 30, rating: 1400 }, 1400, 1);
 
     expect(c).toBe(1420);
     expect(d).toBe(1390);
 
     // No more less than 30 games
     const [established, establishedB] = update(
-      { games: 31, rating: 1400 },
+      { gamesPlayed: 31, rating: 1400 },
       1400,
       1,
     );
@@ -152,7 +156,7 @@ describe('FIDE Rules', () => {
   });
 
   it('Equal rating - newly player B', () => {
-    const [a, b] = update(1400, { games: 0, rating: 1400 }, 1);
+    const [a, b] = update(1400, { gamesPlayed: 0, rating: 1400 }, 1);
 
     expect(a).toBe(1410);
     expect(b).toBe(1380);
