@@ -6,9 +6,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![API Docs](https://img.shields.io/badge/API-docs-blue.svg)](https://mormubis.github.io/elo/)
 
-**ELO** is part of the **ECHECS** project, providing an implementation of the
-[ELO Rating System](https://en.wikipedia.org/wiki/Elo_rating_system) following
-[FIDE rules](https://handbook.fide.com/chapter/B022024).
+**ELO** is a small TypeScript library for calculating
+[Elo ratings](https://en.wikipedia.org/wiki/Elo_rating_system) — the system used
+in chess and many other competitive games to measure relative skill.
+
+It follows [FIDE rules](https://handbook.fide.com/chapter/B022024) out of the
+box: K-factors by age, games played, and rating tier; a 400-point rating
+difference cap; and performance rating calculation. Zero runtime dependencies.
 
 ## Installation
 
@@ -16,33 +20,47 @@
 npm install @echecs/elo
 ```
 
-## Usage
-
-**Basic** — bare ratings and result:
+## Quick Start
 
 ```typescript
 import { update } from '@echecs/elo';
 
-const [newRatingA, newRatingB] = update(1400, 1400, 1); // [1410, 1390]
+// Two players both rated 1400. Player A wins.
+const [playerA, playerB] = update(1400, 1400, 1);
+
+console.log(playerA); // 1410
+console.log(playerB); // 1390
 ```
 
-**Player options** — per-player age, games played, or manual K-factor:
+## Usage
+
+**Basic** — when you just need new ratings after a game:
+
+```typescript
+import { update } from '@echecs/elo';
+
+const [newRatingA, newRatingB] = update(1400, 1400, 1); // → [1410, 1390]
+```
+
+**Player options** — pass a player object when you need to apply FIDE K-factor
+rules for age or experience:
 
 ```typescript
 import { update } from '@echecs/elo';
 
 // Young player (age < 18, rating < 2300) gets K=40
-const [newRatingA, newRatingB] = update({ age: 15, rating: 1400 }, 1400, 1); // [1420, 1390]
+const [newRatingA, newRatingB] = update({ age: 15, rating: 1400 }, 1400, 1); // → [1420, 1390]
 
 // New player (≤ 30 games played) also gets K=40
 const [newRatingC, newRatingD] = update(
   { gamesPlayed: 10, rating: 1400 },
   1400,
   1,
-); // [1420, 1390]
+); // → [1420, 1390]
 ```
 
-**Game options** — blitz, rapid, or standard game type:
+**Game options** — pass a game object as the third argument when the game type
+affects the K-factor:
 
 ```typescript
 import { update } from '@echecs/elo';
@@ -51,10 +69,11 @@ import { update } from '@echecs/elo';
 const [newRatingA, newRatingB] = update(2400, 2400, {
   gameType: 'blitz',
   result: 1,
-}); // [2410, 2390]
+}); // → [2410, 2390]
 ```
 
-**Performance rating** — FIDE §8.2.3:
+**Performance rating** — use `performance()` to calculate a player's FIDE
+performance rating over a tournament:
 
 ```typescript
 import { performance } from '@echecs/elo';
