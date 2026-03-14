@@ -8,6 +8,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- `initial(games: ResultAndOpponent[])` function implementing FIDE §8.2 initial
+  rating calculation for unrated players. Injects two hypothetical 1800-rated
+  draws per the spec, caps result at 2200, and reuses the existing
+  `ResultAndOpponent` type.
+
 ## [2.2.1] - 2026-02-21
 
 ### Changed
