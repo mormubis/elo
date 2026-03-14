@@ -1,5 +1,8 @@
 {
   "author": "Adrian de la Rosa <adrian@delarosab.me>",
+  "bugs": {
+    "url": "https://github.com/mormubis/elo/issues"
+  },
   "description": "ELO is part of the ECHECS project, providing an implementation of the ELO Rating System following FIDE rules.",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -19,12 +22,22 @@
     "typescript-eslint": "^8.57.0",
     "vitest": "^4.1.0"
   },
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "/dist/",
     "LICENSE",
     "README.md",
     "CHANGELOG.md"
   ],
+  "homepage": "https://github.com/mormubis/elo#readme",
   "keywords": [
     "chess",
     "elo",
@@ -37,19 +50,6 @@
     "score",
     "scoring"
   ],
-  "bugs": {
-    "url": "https://github.com/mormubis/elo/issues"
-  },
-  "engines": {
-    "node": ">=20"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
-  "homepage": "https://github.com/mormubis/elo#readme",
   "license": "MIT",
   "main": "dist/index.js",
   "name": "@echecs/elo",
