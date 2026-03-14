@@ -102,7 +102,7 @@ the current rating period and the §8.3.3 cap applies:
 ```typescript
 import { update } from '@echecs/elo';
 
-// New player (K=40) playing their 18th game in a period — K is capped to 38
+// New player (K=40) with 18 games played in the period — K is capped to 38
 const [newRatingA, newRatingB] = update(
   { gamesInPeriod: 18, gamesPlayed: 0, rating: 1400 },
   1400,

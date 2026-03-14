@@ -108,6 +108,17 @@ describe('kFactor', () => {
     );
   });
 
+  it('applies the cap to blitz and rapid games', () => {
+    // K=20 for blitz, n=36: 20 × 36 = 720 > 700 → floor(700/36) = 19
+    expect(
+      kFactor({ gameType: 'blitz', gamesInPeriod: 36, rating: 1400 }),
+    ).toBe(19);
+    // K=20 for rapid, n=35: 20 × 35 = 700 ≤ 700 → no cap
+    expect(
+      kFactor({ gameType: 'rapid', gamesInPeriod: 35, rating: 1400 }),
+    ).toBe(20);
+  });
+
   it('returns 20 for a rapid game regardless of rating', () => {
     expect(kFactor({ gameType: 'rapid', rating: 1400 })).toBe(20);
     expect(kFactor({ gameType: 'rapid', rating: 2400 })).toBe(20);
