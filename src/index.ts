@@ -6,6 +6,7 @@ interface KFactorOptions {
   age?: number;
   everHigher2400?: boolean;
   gameType?: GameType;
+  gamesInPeriod?: number;
   gamesPlayed?: number;
   rating: number;
 }
@@ -18,6 +19,7 @@ interface GameOptions {
 interface PlayerOptions {
   age?: number;
   everHigher2400?: boolean;
+  gamesInPeriod?: number;
   gamesPlayed?: number;
   k?: number;
   rating: number;
@@ -79,36 +81,42 @@ function expected(a: number, b: number): number {
  * Determines the appropriate K-factor based on age, rating, game type, and other conditions.
  *
  * @param age - The age of the player. Defaults to 18.
- * @param everHigher2400 - Whether the player’s rating has ever been higher than 2400.
+ * @param everHigher2400 - Whether the player's rating has ever been higher than 2400.
  * @param gamesPlayed - The number of games the player has played. Defaults to 32.
  * @param gameType - The type of game: 'blitz', 'rapid', or 'standard'. Omitting defaults to standard.
+ * @param gamesInPeriod - The number of games played in the rating period; used to cap K per §8.3.3.
  * @param rating - The current rating of the player.
- * @returns The K-factor to be used in rating calculations: 10, 20, or 40.
+ * @returns The K-factor to be used in rating calculations.
  */
 function kFactor({
   age = 18,
   everHigher2400,
   gameType,
+  gamesInPeriod,
   gamesPlayed = 32,
   rating,
-}: KFactorOptions): 10 | 20 | 40 {
-  // If the game is Blitz or Rapid type, return K-factor 20.
+}: KFactorOptions): number {
+  if (gamesInPeriod !== undefined && gamesInPeriod < 1) {
+    throw new RangeError('gamesInPeriod must be at least 1');
+  }
+
+  let k: number;
+
   if (gameType === 'blitz' || gameType === 'rapid') {
-    return 20;
+    k = 20;
+  } else if (gamesPlayed <= 30 || (age < 18 && rating < 2300)) {
+    k = 40;
+  } else if (rating < 2400 && !everHigher2400) {
+    k = 20;
+  } else {
+    k = 10;
   }
 
-  // If the player has played 30 games or fewer, or is under 18 with a rating under 2300, return K-factor 40.
-  if (gamesPlayed <= 30 || (age < 18 && rating < 2300)) {
-    return 40;
+  if (gamesInPeriod !== undefined && k * gamesInPeriod > 700) {
+    k = Math.floor(700 / gamesInPeriod);
   }
 
-  // If the player's rating is under 2400 and has never been higher than 2400, return K-factor 20.
-  if (rating < 2400 && !everHigher2400) {
-    return 20;
-  }
-
-  // Otherwise, return K-factor 10.
-  return 10;
+  return k;
 }
 
 /**
@@ -145,6 +153,7 @@ function update(
         age: playerA.age,
         everHigher2400: playerA.everHigher2400,
         gameType: game.gameType,
+        gamesInPeriod: playerA.gamesInPeriod,
         gamesPlayed: playerA.gamesPlayed,
         rating: playerA.rating,
       }),
@@ -153,6 +162,7 @@ function update(
         age: playerB.age,
         everHigher2400: playerB.everHigher2400,
         gameType: game.gameType,
+        gamesInPeriod: playerB.gamesInPeriod,
         gamesPlayed: playerB.gamesPlayed,
         rating: playerB.rating,
       }),
