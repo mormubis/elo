@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-03-14
+
 ### Added
 
 - `initial(games: ResultAndOpponent[])` function implementing FIDE §8.2 initial
@@ -237,7 +239,8 @@ update(1400, 1600, { gameType: 'blitz', result: 1 }); // game-level option
 - GitHub Actions CI/CD workflow for automated testing
 - NPM publishing automation
 
-[Unreleased]: https://github.com/mormubis/elo/compare/v2.2.1...HEAD
+[Unreleased]: https://github.com/mormubis/elo/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/mormubis/elo/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/mormubis/elo/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/mormubis/elo/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/mormubis/elo/compare/v2.0.0...v2.1.0
