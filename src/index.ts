@@ -194,6 +194,50 @@ function performance(games: ResultAndOpponent[]): number {
   return Math.round(ra + dp);
 }
 
+/**
+ * Calculates the initial rating of a previously unrated player.
+ *
+ * @see https://handbook.fide.com/chapter/B022024 Section 8.2
+ * @param games - Array of games against rated opponents.
+ * @returns The initial rating rounded to the nearest integer, capped at 2200.
+ * @throws {RangeError} If the games array is empty or contains invalid result values.
+ */
+function initial(games: ResultAndOpponent[]): number {
+  if (games.length === 0) {
+    throw new RangeError('games must not be empty');
+  }
+
+  for (const game of games) {
+    if (game.result !== 0 && game.result !== 0.5 && game.result !== 1) {
+      throw new RangeError('result values must be 0, 0.5, or 1');
+    }
+  }
+
+  // §8.2.2: add two hypothetical opponents rated 1800, each counted as a draw
+  const allGames: ResultAndOpponent[] = [
+    ...games,
+    { opponentRating: 1800, result: 0.5 },
+    { opponentRating: 1800, result: 0.5 },
+  ];
+
+  const ra =
+    allGames.reduce((sum, game) => sum + game.opponentRating, 0) /
+    allGames.length;
+
+  const score = allGames.reduce((sum, game) => sum + game.result, 0);
+  const p = score / allGames.length;
+
+  const index = Math.round(p * 100);
+  const dp = DP_TABLE[index];
+
+  if (dp === undefined) {
+    throw new RangeError('result values must be 0, 0.5, or 1');
+  }
+
+  // §8.2.3: cap at 2200
+  return Math.min(Math.round(ra + dp), 2200);
+}
+
 export type {
   GameOptions,
   GameType,
@@ -202,4 +246,4 @@ export type {
   Result,
   ResultAndOpponent,
 };
-export { delta, expected, kFactor, performance, update };
+export { delta, expected, initial, kFactor, performance, update };
