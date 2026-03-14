@@ -118,7 +118,9 @@ describe('kFactor', () => {
 
   it('returns uncapped K when gamesInPeriod is below threshold', () => {
     // K=40, n=17: 40 × 17 = 680 ≤ 700 → no cap
-    expect(kFactor({ gamesInPeriod: 17, rating: 1400 })).toBe(40);
+    expect(kFactor({ gamesInPeriod: 17, gamesPlayed: 0, rating: 1400 })).toBe(
+      40,
+    );
     // K=20, n=35: 20 × 35 = 700 ≤ 700 → no cap
     expect(kFactor({ gamesInPeriod: 35, gamesPlayed: 31, rating: 1400 })).toBe(
       20,
@@ -131,7 +133,9 @@ describe('kFactor', () => {
 
   it('returns capped K when gamesInPeriod exceeds threshold', () => {
     // K=40, n=18: floor(700/18) = 38
-    expect(kFactor({ gamesInPeriod: 18, rating: 1400 })).toBe(38);
+    expect(kFactor({ gamesInPeriod: 18, gamesPlayed: 0, rating: 1400 })).toBe(
+      38,
+    );
     // K=20, n=36: floor(700/36) = 19
     expect(kFactor({ gamesInPeriod: 36, gamesPlayed: 31, rating: 1400 })).toBe(
       19,
