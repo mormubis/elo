@@ -321,6 +321,49 @@ describe('FIDE Rules', () => {
     expect(capped).toBe(maxDiff);
   });
 
+  // §8.3.1 (effective 1 October 2025): cap exemption for 2650+ players
+  it('does not cap the difference when player A is rated >= 2650', () => {
+    // 500-point diff; without cap: 1 / (1 + 10^(500/400)) ≈ 0.0563
+    // with cap:    1 / (1 + 10^(400/400)) = 1 / 11 ≈ 0.0909
+    expect(expected(2700, 2200)).toBeCloseTo(
+      1 / (1 + Math.pow(10, -500 / 400)),
+      5,
+    );
+  });
+
+  it('does not cap the difference when player B is rated >= 2650', () => {
+    expect(expected(2200, 2700)).toBeCloseTo(
+      1 / (1 + Math.pow(10, 500 / 400)),
+      5,
+    );
+  });
+
+  it('still caps the difference when both players are rated below 2650', () => {
+    // 500-point diff, both below 2650: clamped to 400
+    // A (2649) beats B (2100) by 549 pts, clamped to 400
+    // expected(A) = 1 / (1 + 10^((B-A)/400)) = 1 / (1 + 10^(-400/400)) ≈ 0.9091
+    expect(expected(2649, 2100)).toBeCloseTo(
+      1 / (1 + Math.pow(10, -400 / 400)),
+      5,
+    );
+  });
+
+  it('does not cap the difference when player A is rated exactly 2650', () => {
+    // A=2650 is at the threshold — cap should NOT apply
+    expect(expected(2650, 2100)).toBeCloseTo(
+      1 / (1 + Math.pow(10, (2100 - 2650) / 400)),
+      5,
+    );
+  });
+
+  it('does not cap the difference when player B is rated exactly 2650', () => {
+    // B=2650 is at the threshold — cap should NOT apply
+    expect(expected(2100, 2650)).toBeCloseTo(
+      1 / (1 + Math.pow(10, (2650 - 2100) / 400)),
+      5,
+    );
+  });
+
   it('K-factor cap applied via gamesInPeriod in update()', () => {
     // K=40 normally for new player, but capped to 38 with 18 games in period
     // Expected win prob for equal ratings = 0.5

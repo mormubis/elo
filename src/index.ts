@@ -30,6 +30,7 @@ interface ResultAndOpponent {
   result: Result;
 }
 
+const HIGH_RATED_THRESHOLD = 2650;
 const MAX_DIFF = 400;
 
 // @see https://handbook.fide.com/chapter/B022024 Section 8.1.1
@@ -69,10 +70,14 @@ function delta(actual: number, expected: number, k: number): number {
  */
 function expected(a: number, b: number): number {
   // @see https://handbook.fide.com/chapter/B022024
-  // Section 8.3.1
-  // A difference in rating of more than 400 points shall be counted for
-  // rating purposes as though it were a difference of 400 points.
-  const diff = Math.min(Math.max(b - a, -MAX_DIFF), MAX_DIFF);
+  // Section 8.3.1 (effective 1 October 2025)
+  // For players rated below 2650, a difference of more than 400 points is
+  // counted as 400 points. For players rated 2650 and above, the actual
+  // difference is used.
+  const diff =
+    a >= HIGH_RATED_THRESHOLD || b >= HIGH_RATED_THRESHOLD
+      ? b - a
+      : Math.min(Math.max(b - a, -MAX_DIFF), MAX_DIFF);
 
   return 1 / (1 + Math.pow(10, diff / 400));
 }
