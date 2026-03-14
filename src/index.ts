@@ -228,9 +228,13 @@ function initial(games: ResultAndOpponent[]): number {
   const p = score / allGames.length;
 
   const index = Math.round(p * 100);
-  const dp = DP_TABLE[index] as number;
+  const dp = DP_TABLE[index];
 
-  // §8.2.3: cap at 2200
+  if (dp === undefined) {
+    throw new RangeError('result values must be 0, 0.5, or 1');
+  }
+
+  // §8.2: cap at 2200
   return Math.min(Math.round(ra + dp), 2200);
 }
 

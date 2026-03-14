@@ -109,8 +109,8 @@ const rating = performance([
 ```
 
 **Initial rating** — use `initial()` to calculate a new (unrated) player's first
-FIDE rating. If their first event was a zero score, filter it out before calling
-(§8.2.1):
+FIDE rating. If the player scored zero points across their entire first event,
+omit all games from that event before calling (§8.2.1):
 
 ```typescript
 import { initial } from '@echecs/elo';
@@ -121,7 +121,7 @@ const rating = initial([
   { opponentRating: 1700, result: 0 },
   { opponentRating: 1600, result: 1 },
   { opponentRating: 1550, result: 1 },
-]);
+]); // → 1752
 ```
 
 ## API
