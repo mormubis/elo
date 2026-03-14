@@ -146,11 +146,14 @@ describe('kFactor', () => {
     ).toBe(9);
   });
 
-  it('throws RangeError when gamesInPeriod is less than 1', () => {
+  it('throws RangeError when gamesInPeriod is invalid', () => {
     expect(() => kFactor({ gamesInPeriod: 0, rating: 1400 })).toThrow(
       RangeError,
     );
     expect(() => kFactor({ gamesInPeriod: -1, rating: 1400 })).toThrow(
+      RangeError,
+    );
+    expect(() => kFactor({ gamesInPeriod: 1.5, rating: 1400 })).toThrow(
       RangeError,
     );
   });

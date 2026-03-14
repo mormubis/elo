@@ -96,8 +96,11 @@ function kFactor({
   gamesPlayed = 32,
   rating,
 }: KFactorOptions): number {
-  if (gamesInPeriod !== undefined && gamesInPeriod < 1) {
-    throw new RangeError('gamesInPeriod must be at least 1');
+  if (
+    gamesInPeriod !== undefined &&
+    (gamesInPeriod < 1 || !Number.isInteger(gamesInPeriod))
+  ) {
+    throw new RangeError('gamesInPeriod must be a positive integer');
   }
 
   let k: number;
