@@ -30,6 +30,9 @@ implement the rest yourself. This library ships it all out of the box:
   skip this.
 - **Performance rating** — calculates a player's FIDE performance rating
   (§8.2.3) over a series of games. No other Elo library on npm implements this.
+- **Initial rating calculation** — computes a new player's first published
+  rating (§8.2) using the FIDE hypothetical-opponent adjustment and 2200 cap. No
+  other Elo library on npm implements this.
 
 If you don't need FIDE compliance, any Elo library will do. If you do, this is
 the one.
@@ -103,6 +106,22 @@ const rating = performance([
   { opponentRating: 1600, result: 0.5 },
   { opponentRating: 1600, result: 0 },
 ]); // 1600
+```
+
+**Initial rating** — use `initial()` to calculate a new (unrated) player's first
+FIDE rating. If their first event was a zero score, filter it out before calling
+(§8.2.1):
+
+```typescript
+import { initial } from '@echecs/elo';
+
+const rating = initial([
+  { opponentRating: 1600, result: 1 },
+  { opponentRating: 1500, result: 0.5 },
+  { opponentRating: 1700, result: 0 },
+  { opponentRating: 1600, result: 1 },
+  { opponentRating: 1550, result: 1 },
+]);
 ```
 
 ## API
