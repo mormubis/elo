@@ -115,6 +115,41 @@ describe('kFactor', () => {
       20,
     );
   });
+
+  it('returns uncapped K when gamesInPeriod is below threshold', () => {
+    // K=40, n=17: 40 × 17 = 680 ≤ 700 → no cap
+    expect(kFactor({ gamesInPeriod: 17, rating: 1400 })).toBe(40);
+    // K=20, n=35: 20 × 35 = 700 ≤ 700 → no cap
+    expect(kFactor({ gamesInPeriod: 35, gamesPlayed: 31, rating: 1400 })).toBe(
+      20,
+    );
+    // K=10, n=70: 10 × 70 = 700 ≤ 700 → no cap
+    expect(
+      kFactor({ everHigher2400: true, gamesInPeriod: 70, rating: 2300 }),
+    ).toBe(10);
+  });
+
+  it('returns capped K when gamesInPeriod exceeds threshold', () => {
+    // K=40, n=18: floor(700/18) = 38
+    expect(kFactor({ gamesInPeriod: 18, rating: 1400 })).toBe(38);
+    // K=20, n=36: floor(700/36) = 19
+    expect(kFactor({ gamesInPeriod: 36, gamesPlayed: 31, rating: 1400 })).toBe(
+      19,
+    );
+    // K=10, n=71: floor(700/71) = 9
+    expect(
+      kFactor({ everHigher2400: true, gamesInPeriod: 71, rating: 2300 }),
+    ).toBe(9);
+  });
+
+  it('throws RangeError when gamesInPeriod is less than 1', () => {
+    expect(() => kFactor({ gamesInPeriod: 0, rating: 1400 })).toThrow(
+      RangeError,
+    );
+    expect(() => kFactor({ gamesInPeriod: -1, rating: 1400 })).toThrow(
+      RangeError,
+    );
+  });
 });
 
 // @see https://ratings.fide.com/calc.phtml?page=change
@@ -266,6 +301,19 @@ describe('FIDE Rules', () => {
     const maxDiff = expected(1000, 1400);
 
     expect(capped).toBe(maxDiff);
+  });
+
+  it('K-factor cap applied via gamesInPeriod in update()', () => {
+    // K=40 normally for new player, but capped to 38 with 18 games in period
+    // Expected win prob for equal ratings = 0.5
+    // delta = floor(700/18) * (1 - 0.5) = 38 * 0.5 = 19 → rounded = 19
+    const [a, b] = update(
+      { gamesInPeriod: 18, gamesPlayed: 0, rating: 1400 },
+      1400,
+      1,
+    );
+    expect(a).toBe(1419);
+    expect(b).toBe(1390); // opponent not capped: K=20, delta = 20 * (0 - 0.5) = -10
   });
 });
 
