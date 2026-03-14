@@ -8,6 +8,15 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-03-15
+
+### Fixed
+
+- `expected()`: players rated 2650 or above are no longer subject to the
+  400-point rating difference cap, per FIDE §8.3.1 (effective 1 October 2025).
+- `update()`: rating changes of exactly ±0.5 now round away from zero (e.g. −0.5
+  → −1), as required by FIDE §8.3.4.
+
 ## [3.0.0] - 2026-03-14
 
 ### Added
@@ -253,7 +262,8 @@ update(1400, 1600, { gameType: 'blitz', result: 1 }); // game-level option
 - GitHub Actions CI/CD workflow for automated testing
 - NPM publishing automation
 
-[Unreleased]: https://github.com/mormubis/elo/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/mormubis/elo/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/mormubis/elo/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/mormubis/elo/compare/v2.3.0...v3.0.0
 [2.3.0]: https://github.com/mormubis/elo/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/mormubis/elo/compare/v2.2.0...v2.2.1
