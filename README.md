@@ -22,7 +22,8 @@ implement the rest yourself. This library ships it all out of the box:
 
 - **FIDE K-factor rules** — K=40 for new players (≤ 30 games) and juniors (age <
   18, rating < 2300), K=10 for players who have ever reached 2400, K=20 for
-  everyone else. No configuration needed.
+  everyone else. Includes the §8.3.3 per-period cap: if K × n > 700, K is
+  reduced so the total change stays within bounds.
 - **Game type awareness** — blitz and rapid games always use K=20, regardless of
   rating or experience, matching FIDE §B02.
 - **400-point rating difference cap** — rating differences above 400 are clamped
@@ -93,6 +94,20 @@ const [newRatingA, newRatingB] = update(2400, 2400, {
   gameType: 'blitz',
   result: 1,
 }); // → [2410, 2390]
+```
+
+**K-factor cap** — pass `gamesInPeriod` when a player has played many games in
+the current rating period and the §8.3.3 cap applies:
+
+```typescript
+import { update } from '@echecs/elo';
+
+// New player (K=40) playing their 18th game in a period — K is capped to 38
+const [newRatingA, newRatingB] = update(
+  { gamesInPeriod: 18, gamesPlayed: 0, rating: 1400 },
+  1400,
+  1,
+); // → [1419, 1390]
 ```
 
 **Performance rating** — use `performance()` to calculate a player's FIDE
