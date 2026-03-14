@@ -378,6 +378,24 @@ describe('FIDE Rules', () => {
   });
 });
 
+describe('update', () => {
+  // §8.3.4: 0.5 must round away from zero
+  it('rounds a -0.5 delta away from zero (loss with K=1 at equal ratings)', () => {
+    // k=1, equal ratings, result=0 (loss):
+    // delta = 1 * (0 - 0.5) = -0.5  →  1400 + (-0.5) = 1399.5  →  should be 1399
+    const [a] = update({ k: 1, rating: 1400 }, { k: 1, rating: 1400 }, 0);
+    expect(a).toBe(1399);
+  });
+
+  it('rounds a -0.5 delta away from zero for the losing opponent (K=1, equal ratings, win)', () => {
+    // k=1, equal ratings, result=1 (A wins, B loses):
+    // B's delta = 1 * (0 - 0.5) = -0.5  →  1400 + (-0.5) = 1399.5  →  should be 1399
+    // Old Math.round(1399.5) would give 1400 — this test would fail with old code
+    const [, b] = update({ k: 1, rating: 1400 }, { k: 1, rating: 1400 }, 1);
+    expect(b).toBe(1399);
+  });
+});
+
 describe('performance', () => {
   it('throws RangeError for empty games array', () => {
     expect(() => performance([])).toThrow(RangeError);

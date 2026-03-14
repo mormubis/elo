@@ -128,6 +128,15 @@ function kFactor({
 }
 
 /**
+ * Rounds a number to the nearest integer, with 0.5 rounded away from zero.
+ *
+ * @see https://handbook.fide.com/chapter/B022024 Section 8.3.4
+ */
+function roundHalfAwayFromZero(x: number): number {
+  return Math.sign(x) * Math.round(Math.abs(x));
+}
+
+/**
  * Updates the Elo ratings of two players based on the result of their game.
  *
  * @param a - The current rating of player A, or a PlayerOptions object.
@@ -176,10 +185,10 @@ function update(
       }),
   ];
 
-  // Calculate and return the updated ratings for both players, rounded to the nearest integer.
+  // Per §8.3.4, round each delta away from zero before adding to the player's rating.
   return [
-    Math.round(playerA.rating + delta(game.result, oddsA, kA)),
-    Math.round(playerB.rating + delta(1 - game.result, oddsB, kB)),
+    playerA.rating + roundHalfAwayFromZero(delta(game.result, oddsA, kA)),
+    playerB.rating + roundHalfAwayFromZero(delta(1 - game.result, oddsB, kB)),
   ];
 }
 
