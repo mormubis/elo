@@ -1,10 +1,10 @@
 {
   "entryPoints": ["src/index.ts"],
-  "out": "docs",
-  "readme": "README.md",
+  "excludeInternal": false,
   "excludePrivate": true,
   "excludeProtected": false,
-  "excludeInternal": false,
   "includeVersion": true,
+  "out": "docs/api",
+  "readme": "README.md",
   "sort": ["source-order"]
 }
