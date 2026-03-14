@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { delta, expected, kFactor, performance, update } from '../index.js';
+import {
+  delta,
+  expected,
+  initial,
+  kFactor,
+  performance,
+  update,
+} from '../index.js';
 
 // @see https://github.com/dmamills/elo-rank/blob/f691623c4d048705a8754f044c6a2b3d2df395a5/test/tests.js
 describe('ELO Rank tests', () => {
@@ -321,5 +328,73 @@ describe('performance', () => {
     ]);
     // Ra = (1400+1400+1500)/3 = 1433.33, p=0.5, dp=0 → Math.round(1433.33) = 1433
     expect(result).toBe(1433);
+  });
+});
+
+describe('initial', () => {
+  it('throws RangeError for empty games array', () => {
+    expect(() => initial([])).toThrow(RangeError);
+  });
+
+  it('injects two hypothetical 1800-rated draws', () => {
+    // 5 wins against 1800-rated opponents
+    // Without hypothetical opponents: p = 5/5 = 1.0, Ra = 1800, dp = 800 → 2600 (capped to 2200)
+    // With hypothetical opponents: score = 5 + 1 = 6, games = 5 + 2 = 7
+    // p = 6/7 ≈ 0.857 → index = 86 → dp = 309, Ra = (5*1800 + 2*1800)/7 = 1800
+    // result = Math.min(Math.round(1800 + 309), 2200) = 2109
+    const result = initial([
+      { opponentRating: 1800, result: 1 },
+      { opponentRating: 1800, result: 1 },
+      { opponentRating: 1800, result: 1 },
+      { opponentRating: 1800, result: 1 },
+      { opponentRating: 1800, result: 1 },
+    ]);
+    expect(result).toBe(2109);
+  });
+
+  it('caps the result at 2200', () => {
+    // Many wins against high-rated opponents — without cap would exceed 2200
+    const result = initial([
+      { opponentRating: 2500, result: 1 },
+      { opponentRating: 2500, result: 1 },
+      { opponentRating: 2500, result: 1 },
+      { opponentRating: 2500, result: 1 },
+      { opponentRating: 2500, result: 1 },
+    ]);
+    expect(result).toBe(2200);
+  });
+
+  it('returns Ra when p = 0.5 (all draws including hypothetical)', () => {
+    // 2 draws against 1800. With 2 hypothetical 1800 draws:
+    // score = 1 + 1 = 2, games = 4, p = 0.5, dp = 0
+    // Ra = (1800 + 1800 + 1800 + 1800) / 4 = 1800
+    // result = 1800
+    const result = initial([
+      { opponentRating: 1800, result: 0.5 },
+      { opponentRating: 1800, result: 0.5 },
+    ]);
+    expect(result).toBe(1800);
+  });
+
+  it('pulls rating toward 1800 for strong results against weak opponents', () => {
+    // 5 wins against 1000-rated opponents
+    // Without hypothetical: Ra = 1000, p = 1.0, dp = 800 → 1800 (capped)
+    // With hypothetical: Ra = (5*1000 + 2*1800)/7 ≈ 1228.57
+    // score = 6, games = 7, p = 6/7 ≈ 0.857 → dp = 309
+    // result = Math.round(1228.57 + 309) = 1538
+    const result = initial([
+      { opponentRating: 1000, result: 1 },
+      { opponentRating: 1000, result: 1 },
+      { opponentRating: 1000, result: 1 },
+      { opponentRating: 1000, result: 1 },
+      { opponentRating: 1000, result: 1 },
+    ]);
+    expect(result).toBe(1538);
+  });
+
+  it('throws RangeError for invalid result values', () => {
+    expect(() => initial([{ opponentRating: 1400, result: 0.3 as 0 }])).toThrow(
+      RangeError,
+    );
   });
 });
