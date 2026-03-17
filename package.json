@@ -3,7 +3,7 @@
   "bugs": {
     "url": "https://github.com/mormubis/elo/issues"
   },
-  "description": "ELO is part of the ECHECS project, providing an implementation of the ELO Rating System following FIDE rules.",
+  "description": "ELO rating system calculator following FIDE rules. Computes K-factor, expected score, rating delta, and performance rating. Zero dependencies, strict TypeScript.",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@typescript-eslint/parser": "^8.57.0",
@@ -41,14 +41,17 @@
   "keywords": [
     "chess",
     "elo",
+    "expected score",
     "fide",
+    "k-factor",
     "matchmaking",
+    "no-dependencies",
+    "performance",
     "pvp",
     "rank",
     "ranking",
     "rating",
-    "score",
-    "scoring"
+    "typescript"
   ],
   "license": "MIT",
   "main": "dist/index.js",
