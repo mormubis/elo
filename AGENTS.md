@@ -20,7 +20,7 @@ Pure calculation library, no runtime dependencies. Exports five functions
 ### Build
 
 ```bash
-pnpm run build          # compile TypeScript → dist/ (tsconfig.build.json)
+pnpm run build          # bundle TypeScript → dist/ via tsdown
 ```
 
 ### Test
