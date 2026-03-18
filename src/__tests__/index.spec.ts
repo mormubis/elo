@@ -12,16 +12,18 @@ import {
 // @see https://github.com/dmamills/elo-rank/blob/f691623c4d048705a8754f044c6a2b3d2df395a5/test/tests.js
 describe('ELO Rank tests', () => {
   it('should calculate expected properly', function () {
-    expect(expected(1200, 1400)).toBeCloseTo(0.240_25);
+    // §8.1.2: diff 200, range 198-206, PD_L = 0.24
+    expect(expected(1200, 1400)).toBe(0.24);
   });
 
   it('Expect 50/50 chance for equal ranks', function () {
+    // §8.1.2: diff 0, range 0-3, PD_H = 0.50
     expect(expected(1000, 1000)).toBe(0.5);
   });
 
   it('should be almost 100% chance for 0 rank', function () {
-    // Changed respectively to the original file to complain against FIDE > 400 diff points
-    expect(expected(1000, 0)).toBeCloseTo(0.909);
+    // diff 1000, capped to 400. §8.1.2: range 392-411, PD_H = 0.92
+    expect(expected(1000, 0)).toBe(0.92);
   });
 
   it('should update rating properly', function () {
@@ -317,51 +319,41 @@ describe('FIDE Rules', () => {
   it('400-point cap: differences above 400 are treated as 400', () => {
     const capped = expected(1000, 1401);
     const maxDiff = expected(1000, 1400);
-
+    // Both should give same result: diff capped to 400, range 392-411, PD_L = 0.08
     expect(capped).toBe(maxDiff);
+    expect(capped).toBe(0.08);
   });
 
   // §8.3.1 (effective 1 October 2025): cap exemption for 2650+ players
   it('does not cap the difference when player A is rated >= 2650', () => {
-    // 500-point diff; without cap: 1 / (1 + 10^(500/400)) ≈ 0.0563
-    // with cap:    1 / (1 + 10^(400/400)) = 1 / 11 ≈ 0.0909
-    expect(expected(2700, 2200)).toBeCloseTo(
-      1 / (1 + Math.pow(10, -500 / 400)),
-      5,
-    );
+    // diff 500, range 485-517, PD_H = 0.96
+    expect(expected(2700, 2200)).toBe(0.96);
   });
 
   it('does not cap the difference when player B is rated >= 2650', () => {
-    expect(expected(2200, 2700)).toBeCloseTo(
-      1 / (1 + Math.pow(10, 500 / 400)),
-      5,
-    );
+    // diff 500, range 485-517, PD_L = 0.04
+    expect(expected(2200, 2700)).toBe(0.04);
   });
 
   it('still caps the difference when both players are rated below 2650', () => {
-    // 500-point diff, both below 2650: clamped to 400
-    // A (2649) beats B (2100) by 549 pts, clamped to 400
-    // expected(A) = 1 / (1 + 10^((B-A)/400)) = 1 / (1 + 10^(-400/400)) ≈ 0.9091
-    expect(expected(2649, 2100)).toBeCloseTo(
-      1 / (1 + Math.pow(10, -400 / 400)),
-      5,
-    );
+    // diff 549, capped to 400. range 392-411, PD_H = 0.92
+    expect(expected(2649, 2100)).toBe(0.92);
   });
 
   it('does not cap the difference when player A is rated exactly 2650', () => {
-    // A=2650 is at the threshold — cap should NOT apply
-    expect(expected(2650, 2100)).toBeCloseTo(
-      1 / (1 + Math.pow(10, (2100 - 2650) / 400)),
-      5,
-    );
+    // diff 550, NO cap. range 518-559, PD_H = 0.97
+    expect(expected(2650, 2100)).toBe(0.97);
   });
 
   it('does not cap the difference when player B is rated exactly 2650', () => {
-    // B=2650 is at the threshold — cap should NOT apply
-    expect(expected(2100, 2650)).toBeCloseTo(
-      1 / (1 + Math.pow(10, (2650 - 2100) / 400)),
-      5,
-    );
+    // diff 550, NO cap. range 518-559, PD_L = 0.03
+    expect(expected(2100, 2650)).toBe(0.03);
+  });
+
+  it('falls back to formula for differences > 735 (2650+ exemption)', () => {
+    // diff 1000, exceeds table. Use formula: 1 / (1 + 10^(1000/400))
+    const result = expected(3200, 2200);
+    expect(result).toBeCloseTo(1 / (1 + Math.pow(10, -1000 / 400)), 5);
   });
 
   it('K-factor cap applied via gamesInPeriod in update()', () => {

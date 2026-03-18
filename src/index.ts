@@ -37,7 +37,6 @@ const MAX_DIFF = 400;
 // Each entry is [maxDiff, PD_H, PD_L] where maxDiff is the upper bound of the
 // rating-difference range, PD_H is the scoring probability for the higher-rated
 // player, and PD_L is the scoring probability for the lower-rated player.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PD_TABLE: readonly [number, number, number][] = [
   [3, 0.5, 0.5],
   [10, 0.51, 0.49],
@@ -137,7 +136,26 @@ function expected(a: number, b: number): number {
       ? b - a
       : Math.min(Math.max(b - a, -MAX_DIFF), MAX_DIFF);
 
-  return 1 / (1 + Math.pow(10, diff / 400));
+  const absDiff = Math.abs(diff);
+
+  // §8.1.2: For differences beyond the table (> 735), which can only occur
+  // via the 2650+ exemption, fall back to the continuous formula.
+  if (absDiff > 735) {
+    return 1 / (1 + Math.pow(10, diff / 400));
+  }
+
+  // §8.1.2: Look up the scoring probability from the FIDE table.
+  for (const [maxDiff, pdH, pdL] of PD_TABLE) {
+    if (absDiff <= maxDiff) {
+      // diff <= 0 means player A is higher-rated or equal → return PD_H
+      // diff > 0 means player A is lower-rated → return PD_L
+      return diff <= 0 ? pdH : pdL;
+    }
+  }
+
+  // Should not be reached for valid inputs within the table range,
+  // but handles the edge case defensively.
+  return diff <= 0 ? 1 : 0;
 }
 
 /**
