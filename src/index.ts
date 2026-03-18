@@ -186,6 +186,9 @@ function kFactor({
 
   let k: number;
 
+  // K=20 for blitz and rapid games per FIDE Rapid & Blitz rating regulations
+  // (separate from standard §8.3.3). These regulations mirror the standard
+  // K-factor structure but fix K=20 regardless of rating or experience.
   if (gameType === 'blitz' || gameType === 'rapid') {
     k = 20;
   } else if (gamesPlayed <= 30 || (age < 18 && rating < 2300)) {
