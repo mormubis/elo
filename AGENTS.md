@@ -15,19 +15,18 @@ types (`GameOptions`, `GameType`, `KFactorOptions`, `PlayerOptions`, `Result`,
 
 ---
 
-## Competitive Landscape
+## Similar Libraries
 
-`@echecs/elo` is the only Elo package on npm that follows FIDE rules. The
-alternatives (`elo-rank`, `@rocambille/elo`, `@ihs7/ts-elo`,
-`elo-rating-system`) implement only the basic Elo formula with a fixed K-factor.
-None of them provide FIDE K-factor tiers, the 400-point cap, performance rating,
-or initial rating calculation. The most popular competitor (`elo-rank`, ~3,600
-downloads/week) has not been updated in over 6 years.
+Use these to cross-check output when testing:
 
-When evaluating feature requests or design decisions, keep this positioning in
-mind: FIDE compliance is the core differentiator. Features that strengthen FIDE
-accuracy are high-value; features unrelated to FIDE (e.g. team/multiplayer
-support) are out of scope.
+- [`elo-rank`](https://www.npmjs.com/package/elo-rank) — basic Elo with fixed
+  K-factor, no FIDE rules.
+- [`@rocambille/elo`](https://www.npmjs.com/package/@rocambille/elo) — Elo with
+  object enrichment; no FIDE K-factor tiers.
+- [`@ihs7/ts-elo`](https://www.npmjs.com/package/@ihs7/ts-elo) — TypeScript Elo;
+  supports multiplayer/team but no FIDE compliance.
+- [`elo-rating-system`](https://www.npmjs.com/package/elo-rating-system) — basic
+  Elo formula only.
 
 ---
 
@@ -198,9 +197,67 @@ checks, assertion functions) unless there is an explicit trust boundary.
 
 ---
 
-## Publishing
+## Release Protocol
 
-The package is published as `@echecs/elo`. A GitHub Actions workflow publishes
-automatically when the `version` field in `package.json` is bumped on `main`. Do
-not manually publish. Always update `CHANGELOG.md` alongside any version bump.
-Bump patch for fixes, minor for new features, major for breaking changes.
+Step-by-step process for releasing a new version. CI auto-publishes to npm when
+`version` in `package.json` changes on `main`.
+
+1. **Verify the package is clean:**
+
+   ```bash
+   pnpm lint && pnpm test && pnpm build
+   ```
+
+   Do not proceed if any step fails.
+
+2. **Decide the semver level:**
+   - `patch` — bug fixes, internal refactors with no API change
+   - `minor` — new features, new exports, non-breaking additions
+   - `major` — breaking changes to the public API
+
+3. **Update `CHANGELOG.md`** following
+   [Keep a Changelog](https://keepachangelog.com) format:
+
+   ```markdown
+   ## [x.y.z] - YYYY-MM-DD
+
+   ### Added
+
+   - …
+
+   ### Changed
+
+   - …
+
+   ### Fixed
+
+   - …
+
+   ### Removed
+
+   - …
+   ```
+
+   Include only sections that apply. Use past tense.
+
+4. **Update `README.md`** if the release introduces new public API, changes
+   usage examples, or deprecates/removes existing features.
+
+5. **Bump the version:**
+
+   ```bash
+   npm version <major|minor|patch> --no-git-tag-version
+   ```
+
+6. **Commit and push:**
+
+   ```bash
+   git add package.json CHANGELOG.md README.md
+   git commit -m "release: @echecs/elo@x.y.z"
+   git push
+   ```
+
+7. **CI takes over:** GitHub Actions detects the version bump, runs format →
+   lint → test, and publishes to npm.
+
+Do not manually publish with `npm publish`.
