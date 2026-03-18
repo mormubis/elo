@@ -8,6 +8,22 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-03-18
+
+### Changed
+
+- **BREAKING:** `expected()` now uses the official FIDE §8.1.2 discrete lookup
+  table instead of the continuous formula. Return values are now discrete (0.50,
+  0.51, ..., 1.00) matching FIDE exactly. For rating differences > 735 (only
+  possible via the 2650+ cap exemption), the continuous formula is used as a
+  fallback.
+
+### Added
+
+- Source comment in `kFactor()` citing FIDE Rapid & Blitz regulations for K=20.
+- Integration test confirming the 2650+ cap exemption propagates correctly
+  through `update()`.
+
 ## [3.1.0] - 2026-03-15
 
 ### Fixed
