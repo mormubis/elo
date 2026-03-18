@@ -7,11 +7,27 @@ implementing the ELO Rating System following FIDE rules.
 
 ## Project Overview
 
-Pure calculation library, no runtime dependencies. Exports five functions
-(`expected`, `kFactor`, `delta`, `update`, `performance`) and six types
-(`GameOptions`, `GameType`, `KFactorOptions`, `PlayerOptions`, `Result`,
+Pure calculation library, no runtime dependencies. Exports six functions
+(`delta`, `expected`, `initial`, `kFactor`, `performance`, `update`) and six
+types (`GameOptions`, `GameType`, `KFactorOptions`, `PlayerOptions`, `Result`,
 `ResultAndOpponent`). All source lives in `src/index.ts`; tests in
 `src/__tests__/index.spec.ts`.
+
+---
+
+## Competitive Landscape
+
+`@echecs/elo` is the only Elo package on npm that follows FIDE rules. The
+alternatives (`elo-rank`, `@rocambille/elo`, `@ihs7/ts-elo`,
+`elo-rating-system`) implement only the basic Elo formula with a fixed K-factor.
+None of them provide FIDE K-factor tiers, the 400-point cap, performance rating,
+or initial rating calculation. The most popular competitor (`elo-rank`, ~3,600
+downloads/week) has not been updated in over 6 years.
+
+When evaluating feature requests or design decisions, keep this positioning in
+mind: FIDE compliance is the core differentiator. Features that strengthen FIDE
+accuracy are high-value; features unrelated to FIDE (e.g. team/multiplayer
+support) are out of scope.
 
 ---
 
@@ -151,6 +167,15 @@ import { delta, expected, kFactor, update } from '../index.js';
   in test data objects.
 - Reference FIDE's online calculator when adding new rule-based tests:
   https://ratings.fide.com/calc.phtml?page=change
+
+---
+
+## Validation
+
+Input validation is mostly provided by TypeScript's strict type system at
+compile time. There is no runtime validation library — the type signatures
+enforce correct usage. Do not add runtime type-checking guards (e.g. `typeof`
+checks, assertion functions) unless there is an explicit trust boundary.
 
 ---
 
