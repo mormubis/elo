@@ -324,6 +324,13 @@ describe('FIDE Rules', () => {
     expect(capped).toBe(0.08);
   });
 
+  it('returns correct PD at table range boundaries', () => {
+    // diff 3 → range 0-3, PD_H = 0.50
+    expect(expected(1003, 1000)).toBe(0.5);
+    // diff 4 → range 4-10, PD_L = 0.49
+    expect(expected(1000, 1004)).toBe(0.49);
+  });
+
   // §8.3.1 (effective 1 October 2025): cap exemption for 2650+ players
   it('does not cap the difference when player A is rated >= 2650', () => {
     // diff 500, range 485-517, PD_H = 0.96

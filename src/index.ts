@@ -139,7 +139,9 @@ function expected(a: number, b: number): number {
   const absDiff = Math.abs(diff);
 
   // §8.1.2: For differences beyond the table (> 735), which can only occur
-  // via the 2650+ exemption, fall back to the continuous formula.
+  // via the 2650+ exemption, fall back to the continuous formula. The table
+  // shows PD = 1.0/0.0 for > 735, but using the formula gives more precise
+  // values for extreme differences (e.g. diff 1000 → ~0.997 rather than 1.0).
   if (absDiff > 735) {
     return 1 / (1 + Math.pow(10, diff / 400));
   }
@@ -153,8 +155,8 @@ function expected(a: number, b: number): number {
     }
   }
 
-  // Should not be reached for valid inputs within the table range,
-  // but handles the edge case defensively.
+  // Unreachable: the > 735 check and PD_TABLE (covering 0–735) exhaust all
+  // non-negative values. Kept for defensive completeness.
   return diff <= 0 ? 1 : 0;
 }
 

@@ -278,7 +278,8 @@ update(1400, 1600, { gameType: 'blitz', result: 1 }); // game-level option
 - GitHub Actions CI/CD workflow for automated testing
 - NPM publishing automation
 
-[Unreleased]: https://github.com/mormubis/elo/compare/v3.1.0...HEAD
+[Unreleased]: https://github.com/mormubis/elo/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/mormubis/elo/compare/v3.1.0...v4.0.0
 [3.1.0]: https://github.com/mormubis/elo/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/mormubis/elo/compare/v2.3.0...v3.0.0
 [2.3.0]: https://github.com/mormubis/elo/compare/v2.2.1...v2.3.0
