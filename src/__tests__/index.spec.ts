@@ -331,6 +331,15 @@ describe('FIDE Rules', () => {
     expect(expected(1000, 1004)).toBe(0.49);
   });
 
+  it('returns correct PD at various table midpoints', () => {
+    // diff 50 → range 47-53, PD_H = 0.57
+    expect(expected(1450, 1400)).toBe(0.57);
+    // diff 150 → range 146-153, PD_L = 0.30
+    expect(expected(1400, 1550)).toBe(0.3);
+    // diff 300 → range 291-302, PD_H = 0.85
+    expect(expected(1700, 1400)).toBe(0.85);
+  });
+
   // §8.3.1 (effective 1 October 2025): cap exemption for 2650+ players
   it('does not cap the difference when player A is rated >= 2650', () => {
     // diff 500, range 485-517, PD_H = 0.96
@@ -390,6 +399,29 @@ describe('FIDE Rules', () => {
     );
     expect(a).toBe(1419);
     expect(b).toBe(1390); // opponent not capped: K=20, delta = 20 * (0 - 0.5) = -10
+  });
+
+  it('Unequal ratings - new player (K=40) vs established (K=20)', () => {
+    // 1600 (new, K=40) vs 1800 (established, K=20)
+    // diff 200 → range 198-206, PD_H = 0.76, PD_L = 0.24
+
+    // New player wins (upset):
+    // dA = 40 * (1 - 0.24) = 30.4 → 30. dB = 20 * (0 - 0.76) = -15.2 → -15
+    const [winA, winB] = update({ gamesPlayed: 10, rating: 1600 }, 1800, 1);
+    expect(winA).toBe(1630);
+    expect(winB).toBe(1785);
+
+    // New player loses (expected):
+    // dA = 40 * (0 - 0.24) = -9.6 → -10. dB = 20 * (1 - 0.76) = 4.8 → 5
+    const [lossA, lossB] = update({ gamesPlayed: 10, rating: 1600 }, 1800, 0);
+    expect(lossA).toBe(1590);
+    expect(lossB).toBe(1805);
+
+    // Draw:
+    // dA = 40 * (0.5 - 0.24) = 10.4 → 10. dB = 20 * (0.5 - 0.76) = -5.2 → -5
+    const [drawA, drawB] = update({ gamesPlayed: 10, rating: 1600 }, 1800, 0.5);
+    expect(drawA).toBe(1610);
+    expect(drawB).toBe(1795);
   });
 });
 

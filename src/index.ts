@@ -114,11 +114,7 @@ const DP_TABLE: readonly number[] = [
  * @returns The scaled difference between actual and expected ratings.
  */
 function delta(actual: number, expected: number, k: number): number {
-  // Calculate the difference between actual and expected ratings.
-  const diff = actual - expected;
-
-  // Scale the difference by the factor k and return the result.
-  return k * diff;
+  return k * (actual - expected);
 }
 
 /**

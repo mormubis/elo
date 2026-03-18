@@ -26,10 +26,10 @@ implement the rest yourself. This library ships it all out of the box:
   reduced so the total change stays within bounds.
 - **Game type awareness** — blitz and rapid games always use K=20, regardless of
   rating or experience, matching FIDE §B02.
-- **400-point rating difference cap** — rating differences above 400 are clamped
-  before calculating win probability, as required by FIDE §8.3.1. Players rated
-  2650 or above are exempt from this cap (§8.3.1, effective 1 October 2025).
-  Most libraries skip both rules.
+- **Official FIDE scoring table** — win probabilities come from the discrete
+  §8.1.2 lookup table, not an approximation formula. Rating differences above
+  400 are clamped as required by §8.3.1; players rated 2650 or above are exempt
+  from this cap (effective 1 October 2025). Most libraries skip both rules.
 - **Performance rating** — calculates a player's FIDE performance rating
   (§8.2.3) over a series of games. No other Elo library on npm implements this.
 - **Initial rating calculation** — computes a new player's first published
