@@ -356,6 +356,22 @@ describe('FIDE Rules', () => {
     expect(result).toBeCloseTo(1 / (1 + Math.pow(10, -1000 / 400)), 5);
   });
 
+  it('2650+ cap exemption propagates through update()', () => {
+    // 2700 vs 2200: diff 500, no cap (2700 >= 2650)
+    // §8.1.2: range 485-517, PD_H = 0.96 for the 2700-rated player
+    // A (2700): K=10 (rating >= 2400). delta_A = 10 * (1 - 0.96) = 0.4 → rounds to 0
+    // B (2200): K=20 (rating < 2400). delta_B = 20 * (0 - 0.04) = -0.8 → rounds to -1
+    const [a, b] = update(2700, 2200, 1);
+    expect(a).toBe(2700);
+    expect(b).toBe(2199);
+
+    // Compare: if capped to 400, range 392-411, PD_H = 0.92
+    // delta_A would be 10 * (1 - 0.92) = 0.8 → rounds to 1 → 2701
+    // delta_B would be 20 * (0 - 0.08) = -1.6 → rounds to -2 → 2198
+    // The uncapped result [2700, 2199] differs from capped [2701, 2198],
+    // confirming the cap exemption matters in practice.
+  });
+
   it('K-factor cap applied via gamesInPeriod in update()', () => {
     // K=40 normally for new player, but capped to 38 with 18 games in period
     // Expected win prob for equal ratings = 0.5
