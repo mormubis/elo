@@ -533,10 +533,4 @@ describe('initial', () => {
     ]);
     expect(result).toBe(1538);
   });
-
-  it('throws RangeError for invalid result values', () => {
-    expect(() => initial([{ opponentRating: 1400, result: 0.3 as 0 }])).toThrow(
-      RangeError,
-    );
-  });
 });

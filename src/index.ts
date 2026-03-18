@@ -30,7 +30,10 @@ interface ResultAndOpponent {
   result: Result;
 }
 
+/** Rating at or above which a player is exempt from the 400-point cap (§8.3.1). */
 const HIGH_RATED_THRESHOLD = 2650;
+
+/** Maximum rating difference used when calculating expected scores (§8.3.1). */
 const MAX_DIFF = 400;
 
 // @see https://handbook.fide.com/chapter/B022024 Section 8.1.2
@@ -313,12 +316,6 @@ function performance(games: ResultAndOpponent[]): number {
 function initial(games: ResultAndOpponent[]): number {
   if (games.length === 0) {
     throw new RangeError('games must not be empty');
-  }
-
-  for (const game of games) {
-    if (game.result !== 0 && game.result !== 0.5 && game.result !== 1) {
-      throw new RangeError('result values must be 0, 0.5, or 1');
-    }
   }
 
   // §8.2.2: add two hypothetical opponents rated 1800, each counted as a draw
