@@ -33,6 +33,64 @@ interface ResultAndOpponent {
 const HIGH_RATED_THRESHOLD = 2650;
 const MAX_DIFF = 400;
 
+// @see https://handbook.fide.com/chapter/B022024 Section 8.1.2
+// Each entry is [maxDiff, PD_H, PD_L] where maxDiff is the upper bound of the
+// rating-difference range, PD_H is the scoring probability for the higher-rated
+// player, and PD_L is the scoring probability for the lower-rated player.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const PD_TABLE: readonly [number, number, number][] = [
+  [3, 0.5, 0.5],
+  [10, 0.51, 0.49],
+  [17, 0.52, 0.48],
+  [25, 0.53, 0.47],
+  [32, 0.54, 0.46],
+  [39, 0.55, 0.45],
+  [46, 0.56, 0.44],
+  [53, 0.57, 0.43],
+  [61, 0.58, 0.42],
+  [68, 0.59, 0.41],
+  [76, 0.6, 0.4],
+  [83, 0.61, 0.39],
+  [91, 0.62, 0.38],
+  [98, 0.63, 0.37],
+  [106, 0.64, 0.36],
+  [113, 0.65, 0.35],
+  [121, 0.66, 0.34],
+  [129, 0.67, 0.33],
+  [137, 0.68, 0.32],
+  [145, 0.69, 0.31],
+  [153, 0.7, 0.3],
+  [162, 0.71, 0.29],
+  [170, 0.72, 0.28],
+  [179, 0.73, 0.27],
+  [188, 0.74, 0.26],
+  [197, 0.75, 0.25],
+  [206, 0.76, 0.24],
+  [215, 0.77, 0.23],
+  [225, 0.78, 0.22],
+  [235, 0.79, 0.21],
+  [245, 0.8, 0.2],
+  [256, 0.81, 0.19],
+  [267, 0.82, 0.18],
+  [278, 0.83, 0.17],
+  [290, 0.84, 0.16],
+  [302, 0.85, 0.15],
+  [315, 0.86, 0.14],
+  [328, 0.87, 0.13],
+  [344, 0.88, 0.12],
+  [357, 0.89, 0.11],
+  [374, 0.9, 0.1],
+  [391, 0.91, 0.09],
+  [411, 0.92, 0.08],
+  [432, 0.93, 0.07],
+  [456, 0.94, 0.06],
+  [484, 0.95, 0.05],
+  [517, 0.96, 0.04],
+  [559, 0.97, 0.03],
+  [619, 0.98, 0.02],
+  [735, 0.99, 0.01],
+];
+
 // @see https://handbook.fide.com/chapter/B022024 Section 8.1.1
 // Index = Math.round(p * 100), value = dp
 const DP_TABLE: readonly number[] = [
