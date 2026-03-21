@@ -8,7 +8,6 @@ import * as typescript from 'typescript-eslint';
 export default typescript.config(
   { ignores: ['tsdown.config.ts'] },
   eslint.configs.recommended,
-  prettier,
   ...typescript.configs.strict,
   ...typescript.configs.stylistic,
   importing.flatConfigs.recommended,
@@ -98,4 +97,5 @@ export default typescript.config(
       'sort-keys': 'off',
     },
   },
+  prettier,
 );
