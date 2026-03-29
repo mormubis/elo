@@ -194,6 +194,7 @@ checks, assertion functions) unless there is an explicit trust boundary.
 - `performance(games)` — FIDE §8.2.3 performance rating via `DP_TABLE` lookup;
   throws `RangeError` for an empty array or out-of-range result values.
 - The library has **no runtime dependencies**; keep it that way.
+- **ESM-only** — the package ships only ESM. Do not add a CJS build.
 
 ---
 
