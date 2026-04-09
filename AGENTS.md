@@ -3,6 +3,8 @@
 Agent guidance for the `@echecs/elo` repository — a TypeScript library
 implementing the ELO Rating System following FIDE rules.
 
+**Backlog:** tracked in [GitHub Issues](https://github.com/mormubis/elo/issues).
+
 ---
 
 ## Project Overview
