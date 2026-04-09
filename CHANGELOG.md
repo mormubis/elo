@@ -8,6 +8,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [4.0.1] - 2026-04-09
+
+### Fixed
+
+- documented `delta`, `expected`, and `kFactor` functions
+- documented all exported types (`GameOptions`, `GameType`, `KFactorOptions`,
+  `PlayerOptions`, `Result`, `ResultAndOpponent`)
+- documented `PlayerOptions.k` override field
+- removed broken `CONTRIBUTING.md` link
+
 ## [4.0.0] - 2026-03-18
 
 ### Changed
@@ -278,7 +288,8 @@ update(1400, 1600, { gameType: 'blitz', result: 1 }); // game-level option
 - GitHub Actions CI/CD workflow for automated testing
 - NPM publishing automation
 
-[Unreleased]: https://github.com/mormubis/elo/compare/v4.0.0...HEAD
+[Unreleased]: https://github.com/mormubis/elo/compare/v4.0.1...HEAD
+[4.0.1]: https://github.com/mormubis/elo/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/mormubis/elo/compare/v3.1.0...v4.0.0
 [3.1.0]: https://github.com/mormubis/elo/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/mormubis/elo/compare/v2.3.0...v3.0.0

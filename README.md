@@ -143,7 +143,145 @@ const rating = initial([
 
 Full API reference is available at https://mormubis.github.io/elo/
 
-## Contributing
+### Functions
 
-Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for
-guidelines on how to submit issues and pull requests.
+#### `update(a, b, resultOrOptions)`
+
+Updates the Elo ratings of two players after a game. Returns a tuple
+`[ratingA, ratingB]` with the new ratings rounded per FIDE §8.3.4.
+
+```typescript
+function update(
+  a: number | PlayerOptions,
+  b: number | PlayerOptions,
+  resultOrOptions: Result | GameOptions,
+): [ratingA: number, ratingB: number];
+```
+
+#### `kFactor(options)`
+
+Returns the FIDE K-factor for a player given their profile. Decision order:
+
+1. `gameType === 'blitz' | 'rapid'` → 20
+2. `gamesPlayed <= 30` or `(age < 18 && rating < 2300)` → 40
+3. `rating >= 2400 || everHigher2400` → 10
+4. otherwise → 20
+
+If `gamesInPeriod` is set and `K × gamesInPeriod > 700`, K is reduced to
+`Math.floor(700 / gamesInPeriod)` per §8.3.3.
+
+```typescript
+function kFactor(options: KFactorOptions): number;
+```
+
+#### `expected(a, b)`
+
+Returns the expected win probability for player A against player B, using the
+FIDE §8.1.2 discrete lookup table. Rating differences are clamped to ±400 unless
+either player is rated ≥ 2650 (§8.3.1).
+
+```typescript
+function expected(a: number, b: number): number;
+```
+
+#### `delta(actual, expected, k)`
+
+Returns the raw rating change: `k * (actual - expected)`. Use this when you need
+the unrounded delta before applying it to a rating.
+
+```typescript
+function delta(actual: number, expected: number, k: number): number;
+```
+
+#### `performance(games)`
+
+Calculates a player's FIDE performance rating (§8.2.3) over a series of games.
+Throws `RangeError` if `games` is empty or contains invalid result values.
+
+```typescript
+function performance(games: ResultAndOpponent[]): number;
+```
+
+#### `initial(games)`
+
+Calculates an unrated player's first FIDE published rating (§8.2). Injects two
+hypothetical 1800-rated draws, caps the result at 2200. Throws `RangeError` if
+`games` is empty.
+
+```typescript
+function initial(games: ResultAndOpponent[]): number;
+```
+
+---
+
+### Types
+
+#### `Result`
+
+```typescript
+type Result = 0 | 0.5 | 1;
+```
+
+Game outcome from the perspective of player A: `1` = win, `0.5` = draw, `0` =
+loss.
+
+#### `GameType`
+
+```typescript
+type GameType = 'blitz' | 'rapid' | 'standard';
+```
+
+#### `GameOptions`
+
+Options for a single game passed as the third argument to `update()`.
+
+```typescript
+interface GameOptions {
+  gameType?: GameType;
+  result: Result;
+}
+```
+
+#### `PlayerOptions`
+
+Per-player options for `update()`. All fields except `rating` are optional.
+
+```typescript
+interface PlayerOptions {
+  age?: number; // player's age — affects K-factor for juniors (< 18)
+  everHigher2400?: boolean; // whether the player has ever been rated ≥ 2400
+  gamesInPeriod?: number; // games played this rating period — used for §8.3.3 cap
+  gamesPlayed?: number; // total career games — new players (≤ 30) get K=40
+  k?: number; // override computed K-factor entirely
+  rating: number; // current rating
+}
+```
+
+The `k` field bypasses all FIDE K-factor logic and uses the supplied value
+directly.
+
+#### `KFactorOptions`
+
+Options for `kFactor()`. Mirrors `PlayerOptions` minus the `k` override.
+
+```typescript
+interface KFactorOptions {
+  age?: number;
+  everHigher2400?: boolean;
+  gameType?: GameType;
+  gamesInPeriod?: number;
+  gamesPlayed?: number;
+  rating: number;
+}
+```
+
+#### `ResultAndOpponent`
+
+A single game result used by `performance()` and `initial()`.
+
+```typescript
+interface ResultAndOpponent {
+  opponentRating: number;
+  result: Result;
+}
+```
