@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [4.0.2] - 2026-04-09
+
+### Changed
+
+- updated description to mention initial rating calculation
+- removed misleading keywords (`matchmaking`, `pvp`, `rank`)
+- added `performance-rating` and `initial-rating` keywords
+
 ## [4.0.1] - 2026-04-09
 
 ### Fixed

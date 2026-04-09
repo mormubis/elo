@@ -3,7 +3,7 @@
   "bugs": {
     "url": "https://github.com/mormubis/elo/issues"
   },
-  "description": "ELO rating system calculator following FIDE rules. Computes K-factor, expected score, rating delta, and performance rating. Zero dependencies, strict TypeScript.",
+  "description": "ELO rating system calculator following FIDE rules. Computes K-factor, expected score, rating delta, performance rating, and initial rating for unrated players. Zero dependencies, strict TypeScript.",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@typescript-eslint/parser": "^8.57.0",
@@ -44,12 +44,10 @@
     "elo",
     "expected score",
     "fide",
+    "initial-rating",
     "k-factor",
-    "matchmaking",
     "no-dependencies",
-    "performance",
-    "pvp",
-    "rank",
+    "performance-rating",
     "ranking",
     "rating",
     "typescript"
@@ -78,5 +76,5 @@
   },
   "type": "module",
   "types": "dist/index.d.ts",
-  "version": "4.0.1"
+  "version": "4.0.2"
 }
